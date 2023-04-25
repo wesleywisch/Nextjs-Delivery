@@ -1,4 +1,5 @@
 import { SearchInput } from '../../components/SearchInput'
+import { Banner } from '../../components/Banner'
 
 import { Container, Header } from './styles'
 
@@ -32,6 +33,8 @@ export default function Home() {
           />
         </div>
       </Header>
+
+      <Banner />
     </Container>
   )
 }
