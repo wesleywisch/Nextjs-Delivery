@@ -52,3 +52,10 @@ export const Header = styled.header`
 
   }
 `;
+
+export const SectionProducts = styled.section`
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  margin: 0rem 1.5rem 0rem 1.5rem;
+`;

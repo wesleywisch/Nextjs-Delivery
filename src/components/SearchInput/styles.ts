@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 type StylesPros = {
-  borderColor: string;
+  tenantBorderColor: string;
 }
 
 export const Container = styled.div<StylesPros>`
@@ -29,6 +29,6 @@ export const Container = styled.div<StylesPros>`
   }
 
   &:focus-within {
-    border: 1px solid ${({ borderColor }) => ( borderColor ? borderColor : '#fff' )};
+    border: 1px solid ${({ tenantBorderColor }) => ( tenantBorderColor ? tenantBorderColor : '#fff' )};
   }
 `;

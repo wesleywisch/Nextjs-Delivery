@@ -1,7 +1,8 @@
 import { SearchInput } from '../../components/SearchInput'
 import { Banner } from '../../components/Banner'
+import { ProductItem } from '../../components/ProductItem'
 
-import { Container, Header } from './styles'
+import { Container, Header, SectionProducts } from './styles'
 
 export default function Home() {
   function handleSearch(searchValue: string) {
@@ -28,13 +29,29 @@ export default function Home() {
 
         <div className="headerBottom">
           <SearchInput
-            borderColor='#fb9400'
+            tenantBorderColor='#fb9400'
             handleOnSearch={handleSearch}
           />
         </div>
       </Header>
 
-      <Banner />
+      <main>
+        <Banner />
+
+        <SectionProducts>
+          <ProductItem
+            data={{
+              id: 1,
+              categoryName: "Tradicional",
+              image: "/tmp/burger.png",
+              name: "Texas Burger",
+              price: "R$ 25,50",
+            }}
+            tenantPrimaryColor='#fb9400'
+            tenantSecondaryColor='#fff9f2'
+          />
+        </SectionProducts>
+      </main>
     </Container>
   )
 }

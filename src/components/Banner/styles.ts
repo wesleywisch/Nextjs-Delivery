@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const Container = styled.div`
+export const Container = styled.section`
   margin: 1.5rem;
 
   .slideImg {
@@ -18,7 +18,7 @@ export const Container = styled.div`
     width: 100%;
     height: 100%;
     border-radius: .5rem;
-    box-shadow: 0px 8px 40px rgba(0,0,0,0.08);
+    box-shadow: 0rem .5rem 2.5rem rgba(0,0,0,0.08);
   }
 
   .swiper-slide {

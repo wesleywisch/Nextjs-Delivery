@@ -3,11 +3,11 @@ import { KeyboardEvent, useState } from "react";
 import { Container } from "./styles";
 
 type SearchInputProps = {
-  borderColor: string;
+  tenantBorderColor: string;
   handleOnSearch: (searchValue: string) => void;
 }
 
-export function SearchInput({ borderColor, handleOnSearch }: SearchInputProps) {
+export function SearchInput({ tenantBorderColor, handleOnSearch }: SearchInputProps) {
   const [searchValue, setSearchValue] = useState('');
 
   function handleButtonSearch() {
@@ -25,7 +25,7 @@ export function SearchInput({ borderColor, handleOnSearch }: SearchInputProps) {
   }
 
   return (
-    <Container borderColor={borderColor}>
+    <Container tenantBorderColor={tenantBorderColor}>
       <div className="button" onClick={handleButtonSearch}>
 
       </div>
