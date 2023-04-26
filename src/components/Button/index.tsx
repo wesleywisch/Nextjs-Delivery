@@ -1,21 +1,22 @@
+import { ButtonHTMLAttributes } from "react";
+
 import { Container } from "./styles";
 
-interface ButtonProps {
+interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   tenantColor: string;
   label: string;
-  handleOnClick: () => void;
+  handleOnClick: (event: any) => void;
   fill?: boolean;
-  disabled?: boolean;
 }
 
-export function Button({ tenantColor, label, handleOnClick, fill, disabled }: ButtonProps) {
+export function Button({ tenantColor, label, handleOnClick, fill, ...rest }: ButtonProps) {
   return (
     <Container
       onClick={handleOnClick}
-      disabled={disabled}
       textColor={fill ? '#fff' : tenantColor}
       borderColor={tenantColor}
       backgroundColor={fill ? tenantColor : 'transparent'}
+      {...rest}
     >
       {label}
     </Container>
