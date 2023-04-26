@@ -1,6 +1,11 @@
+/* eslint-disable react-hooks/rules-of-hooks */
+import { GetServerSideProps } from 'next'
+
 import { SearchInput } from '../../components/SearchInput'
 import { Banner } from '../../components/Banner'
 import { ProductItem } from '../../components/ProductItem'
+
+import { useApi } from '../../hooks/useApi'
 
 import { Container, Header, SectionProducts } from './styles'
 
@@ -54,4 +59,26 @@ export default function Home() {
       </main>
     </Container>
   )
+}
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const { tenant: tenantSlug } = ctx.query;
+  const api = useApi();
+
+  const tenant = api.getTenant(tenantSlug as string);
+
+  if (!tenant) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      }
+    }
+  }
+
+  return {
+    props: {
+      tenant,
+    }
+  }
 }

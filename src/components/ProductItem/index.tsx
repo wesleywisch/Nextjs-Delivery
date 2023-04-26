@@ -31,9 +31,9 @@ export function ProductItem({ data, tenantPrimaryColor, tenantSecondaryColor }: 
             />
           </div>
 
-          <p className="categoryName" title={data.categoryName}>{data.categoryName}</p>
+          <span className="categoryName" title={data.categoryName}>{data.categoryName}</span>
           <p className="productName" title={data.name}>{data.name}</p>
-          <p className="productPrice" title={data.price}>{data.price}</p>
+          <span className="productPrice" title={data.price}>{data.price}</span>
         </div>
       </Link>
     </Container>
