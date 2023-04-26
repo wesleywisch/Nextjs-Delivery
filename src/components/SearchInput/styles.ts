@@ -21,7 +21,7 @@ export const Container = styled.div<StylesPros>`
     border-radius: 0.3125rem;
   }
 
-  .input {
+  .inputSearch {
     border: 0;
     outline: 0;
     flex: 1;

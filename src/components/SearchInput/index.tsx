@@ -39,7 +39,7 @@ export function SearchInput({ handleOnSearch }: SearchInputProps) {
 
       <input
         type="text"
-        className="input"
+        className="inputSearch"
         placeholder="Digite o nome do produto"
         onKeyUp={handleKeyUp}
         value={searchValue}
