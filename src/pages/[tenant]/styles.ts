@@ -1,10 +1,14 @@
 import styled from 'styled-components';
 
+type Props = {
+  tenantPrimaryColor: string;
+}
+
 export const Container = styled.div`
   background-color: #fff;
 `;
 
-export const Header = styled.header`
+export const Header = styled.header<Props>`
   background-color: #f9f9fb;
   padding: 3.125rem 1.5rem 1.875rem 1.5rem;
 
@@ -41,7 +45,7 @@ export const Header = styled.header`
         padding: .5px;
 
         .menuButtonLine {
-          background-color: #fb9400;
+          background-color: ${({ tenantPrimaryColor }) => tenantPrimaryColor};
           height: 2px;
         }
       }

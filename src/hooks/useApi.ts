@@ -18,7 +18,7 @@ export function useApi() {
           return {
             name: 'B7Pizza',
             tenantPrimaryColor: '#0000ff',
-            tenantSecondaryColor: '#00ff00',
+            tenantSecondaryColor: '#ff0000',
           }
         default: return false;
       }

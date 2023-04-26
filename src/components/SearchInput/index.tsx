@@ -1,5 +1,7 @@
 import { KeyboardEvent, useState } from "react";
 
+import SearchIcon from './searchIcon.svg';
+
 import { Container } from "./styles";
 
 type SearchInputProps = {
@@ -27,7 +29,7 @@ export function SearchInput({ tenantPrimaryColor, handleOnSearch }: SearchInputP
   return (
     <Container tenantBorderColor={tenantPrimaryColor}>
       <div className="button" onClick={handleButtonSearch}>
-
+        <SearchIcon color={tenantPrimaryColor} />
       </div>
 
       <input

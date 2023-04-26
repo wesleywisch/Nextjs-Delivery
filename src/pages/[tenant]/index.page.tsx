@@ -5,18 +5,22 @@ import { SearchInput } from '../../components/SearchInput'
 import { Banner } from '../../components/Banner'
 import { ProductItem } from '../../components/ProductItem'
 
-import { useApi } from '../../hooks/useApi'
+import { getTenantResponse, useApi } from '../../hooks/useApi'
 
 import { Container, Header, SectionProducts } from './styles'
 
-export default function Home() {
+type HomeProps = {
+  tenant: getTenantResponse;
+}
+
+export default function Home({ tenant }: HomeProps) {
   function handleSearch(searchValue: string) {
     console.log(searchValue)
   }
 
   return (
     <Container>
-      <Header>
+      <Header tenantPrimaryColor={tenant.tenantPrimaryColor}>
         <div className="headerTop">
           <div className="headerTopLeft">
             <h3 className="headerTitle">Seja Bem Vindo (a) 👋</h3>
@@ -34,7 +38,7 @@ export default function Home() {
 
         <div className="headerBottom">
           <SearchInput
-            tenantPrimaryColor='#fb9400'
+            tenantPrimaryColor={tenant.tenantPrimaryColor}
             handleOnSearch={handleSearch}
           />
         </div>
@@ -52,8 +56,8 @@ export default function Home() {
               name: "Texas Burger",
               price: "R$ 25,50",
             }}
-            tenantPrimaryColor='#fb9400'
-            tenantSecondaryColor='#fff9f2'
+            tenantPrimaryColor={tenant.tenantPrimaryColor}
+            tenantSecondaryColor={tenant.tenantSecondaryColor}
           />
         </SectionProducts>
       </main>

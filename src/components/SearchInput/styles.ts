@@ -14,6 +14,9 @@ export const Container = styled.div<StylesPros>`
   .button {
     width: 3rem;
     height: 3rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     background-color: #f9f9fb;
     border-radius: 0.3125rem;
   }
