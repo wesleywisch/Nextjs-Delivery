@@ -1,23 +1,25 @@
+import Link from "next/link";
 import Image from "next/image";
+
+import { useAppContext } from "../../hooks/useAppContext";
 
 import { Product } from "../../types/Product";
 
 import { Container } from "./styles";
-import Link from "next/link";
 
 type ProductItemProps = {
   data: Product;
-  tenantPrimaryColor: string;
-  tenantSecondaryColor: string;
 }
 
-export function ProductItem({ data, tenantPrimaryColor, tenantSecondaryColor }: ProductItemProps) {
+export function ProductItem({ data }: ProductItemProps) {
+  const { tenant } = useAppContext();
+
   return (
     <Container
-      tenantPrimaryColor={tenantPrimaryColor}
-      tenantSecondaryColor={tenantSecondaryColor}
+      tenantPrimaryColor={tenant?.tenantPrimaryColor ? tenant?.tenantPrimaryColor : '#000'}
+      tenantSecondaryColor={tenant?.tenantSecondaryColor ? tenant?.tenantSecondaryColor : '#000'}
     >
-      <Link href={`/product/${data.id}`}>
+      <Link href={`/${tenant?.slug}/product/${data.id}`}>
         <div className="head" />
 
         <div className="info">

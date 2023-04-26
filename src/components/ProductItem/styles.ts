@@ -18,7 +18,7 @@ export const Container = styled.div<Props>`
 
   .head {
     height: 5.625rem;
-    background-color: ${({ tenantSecondaryColor }) => ( tenantSecondaryColor )};
+    background-color: ${({ tenantSecondaryColor }) => tenantSecondaryColor};
   }
 
   .info {
@@ -51,7 +51,7 @@ export const Container = styled.div<Props>`
     .productPrice {
       font-weight: 600;
       font-size: 0.9375rem;
-      color: ${({ tenantPrimaryColor }) => ( tenantPrimaryColor )};
+      color: ${({ tenantPrimaryColor }) => tenantPrimaryColor};
     }
   }
 `;

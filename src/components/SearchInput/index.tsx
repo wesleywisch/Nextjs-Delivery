@@ -2,14 +2,17 @@ import { KeyboardEvent, useState } from "react";
 
 import SearchIcon from './searchIcon.svg';
 
+import { useAppContext } from "../../hooks/useAppContext";
+
 import { Container } from "./styles";
 
 type SearchInputProps = {
-  tenantPrimaryColor: string;
   handleOnSearch: (searchValue: string) => void;
 }
 
-export function SearchInput({ tenantPrimaryColor, handleOnSearch }: SearchInputProps) {
+export function SearchInput({ handleOnSearch }: SearchInputProps) {
+  const { tenant } = useAppContext();
+
   const [searchValue, setSearchValue] = useState('');
 
   function handleButtonSearch() {
@@ -27,9 +30,11 @@ export function SearchInput({ tenantPrimaryColor, handleOnSearch }: SearchInputP
   }
 
   return (
-    <Container tenantBorderColor={tenantPrimaryColor}>
+    <Container
+      tenantBorderColor={tenant?.tenantPrimaryColor ? tenant?.tenantPrimaryColor : '#000'}
+    >
       <div className="button" onClick={handleButtonSearch}>
-        <SearchIcon color={tenantPrimaryColor} />
+        <SearchIcon color={tenant?.tenantPrimaryColor} />
       </div>
 
       <input

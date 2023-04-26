@@ -1,26 +1,37 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-hooks/rules-of-hooks */
 import { GetServerSideProps } from 'next'
+import { useEffect } from 'react'
 
 import { SearchInput } from '../../components/SearchInput'
 import { Banner } from '../../components/Banner'
 import { ProductItem } from '../../components/ProductItem'
 
-import { getTenantResponse, useApi } from '../../hooks/useApi'
+import { useApi } from '../../hooks/useApi'
+import { useAppContext } from '../../hooks/useAppContext'
+
+import { Tenant } from '../../types/Tenant'
 
 import { Container, Header, SectionProducts } from './styles'
 
 type HomeProps = {
-  tenant: getTenantResponse;
+  tenant: Tenant;
 }
 
-export default function Home({ tenant }: HomeProps) {
+export default function Home(data: HomeProps) {
+  const { tenant, setTenant } = useAppContext()
+
+  useEffect(() => {
+    setTenant(data.tenant)
+  }, [])
+
   function handleSearch(searchValue: string) {
     console.log(searchValue)
   }
 
   return (
     <Container>
-      <Header tenantPrimaryColor={tenant.tenantPrimaryColor}>
+      <Header tenantPrimaryColor={tenant?.tenantPrimaryColor ? tenant?.tenantPrimaryColor : '#000'}>
         <div className="headerTop">
           <div className="headerTopLeft">
             <h3 className="headerTitle">Seja Bem Vindo (a) 👋</h3>
@@ -38,7 +49,6 @@ export default function Home({ tenant }: HomeProps) {
 
         <div className="headerBottom">
           <SearchInput
-            tenantPrimaryColor={tenant.tenantPrimaryColor}
             handleOnSearch={handleSearch}
           />
         </div>
@@ -56,8 +66,6 @@ export default function Home({ tenant }: HomeProps) {
               name: "Texas Burger",
               price: "R$ 25,50",
             }}
-            tenantPrimaryColor={tenant.tenantPrimaryColor}
-            tenantSecondaryColor={tenant.tenantSecondaryColor}
           />
         </SectionProducts>
       </main>

@@ -32,6 +32,6 @@ export const Container = styled.div<StylesPros>`
   }
 
   &:focus-within {
-    border: 1px solid ${({ tenantBorderColor }) => ( tenantBorderColor ? tenantBorderColor : '#fff' )};
+    border: 1px solid ${({ tenantBorderColor }) => tenantBorderColor};
   }
 `;
