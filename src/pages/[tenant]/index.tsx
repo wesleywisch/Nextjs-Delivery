@@ -29,7 +29,7 @@ export default function Home() {
 
         <div className="headerBottom">
           <SearchInput
-            tenantBorderColor='#fb9400'
+            tenantPrimaryColor='#fb9400'
             handleOnSearch={handleSearch}
           />
         </div>
