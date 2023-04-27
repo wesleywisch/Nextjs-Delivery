@@ -9,6 +9,19 @@ export const Container = styled.header`
     display: flex;
     justify-content: center;
     align-items: center;
+
+    > a {
+      width: 3rem;
+      height: 3rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: .3rem;
+
+      &.buttonTransparent {
+        background-color: rgba(0,0,0, 0.1)
+      }
+    }
   }
 
   .centerSide {

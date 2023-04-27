@@ -29,9 +29,9 @@ export const Container = styled.div<Props>`
       position: relative;
     }
 
-    .line {
+    .lineSignUp {
       border-top: 1.5px solid #e2e2e2;
-      margin-top: -1.5px;
+      margin-top: -.5px;
     }
   }
 `;

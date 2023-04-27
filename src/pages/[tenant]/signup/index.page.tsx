@@ -58,7 +58,7 @@ export default function SignUp(data: SignUpProps) {
           Preencha os campos para criar o seu cadastro.
         </p>
 
-        <div className="line" />
+        <div className="lineSignUp" />
 
         <ContainerAreaSignUp tenantColor={data.tenant.tenantPrimaryColor}>
           <form className="formSignUp" onSubmit={handleSubmit}>

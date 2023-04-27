@@ -65,7 +65,7 @@ export default function Login(data: LoginProps) {
           Use suas credenciais para realizar o login
         </p>
 
-        <div className="line" />
+        <div className="lineLogin" />
 
         <ContainerAreaLogin tenantColor={data.tenant.tenantPrimaryColor}>
           <form className="formLogin" onSubmit={handleSubmit}>
@@ -105,7 +105,7 @@ export default function Login(data: LoginProps) {
             <p>Esqueceu sua senha? <Link href={`/${data.tenant.slug}/forget`}>Clique aqui.</Link></p>
           </div>
 
-          <div className="line" />
+          <div className="lineLogin2" />
 
           <div className="signUpArea">
             <Button

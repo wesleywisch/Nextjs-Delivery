@@ -64,7 +64,7 @@ export default function Forget(data: ForgetProps) {
           Preencha o campo com seu e-mail e receba as instruções necessárias para redefinir sua senha.
         </p>
 
-        <div className="line" />
+        <div className="lineForget" />
 
         <ContainerAreaForget tenantColor={data.tenant.tenantPrimaryColor}>
           <form className="formLogin" onSubmit={handleSubmit}>

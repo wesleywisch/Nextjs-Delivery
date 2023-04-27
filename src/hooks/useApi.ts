@@ -2,7 +2,7 @@ import { Product } from "../types/Product";
 import { Tenant } from "../types/Tenant";
 
 const TemporaryOneProduct: Product = {
-  id: 1,
+  id: '1',
   image: "/tmp/burger.png",
   categoryName: "Tradicional",
   name: "Texas Burger",
