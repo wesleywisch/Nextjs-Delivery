@@ -77,9 +77,9 @@ export default function ForgetSuccess(data: ForgetSuccessProps) {
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const { tenant: tenantSlug } = ctx.query;
-  const api = useApi();
+  const api = useApi(tenantSlug as string);
 
-  const tenant = api.getTenant(tenantSlug as string);
+  const tenant = await api.getTenant();
 
   if (!tenant) {
     return {

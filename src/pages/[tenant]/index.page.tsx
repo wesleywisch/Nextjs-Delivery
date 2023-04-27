@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-hooks/rules-of-hooks */
 import { GetServerSideProps } from 'next'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 import { SearchInput } from '../../components/SearchInput'
 import { Banner } from '../../components/Banner'
@@ -11,15 +11,19 @@ import { useApi } from '../../hooks/useApi'
 import { useAppContext } from '../../hooks/useAppContext'
 
 import { Tenant } from '../../types/Tenant'
+import { Product } from '../../types/Product'
 
 import { Container, Header, SectionProducts } from './styles'
 
 type HomeProps = {
   tenant: Tenant;
+  products: Product[];
 }
 
 export default function Home(data: HomeProps) {
-  const { tenant, setTenant } = useAppContext()
+  const { tenant, setTenant } = useAppContext();
+
+  const [products, setProducts] = useState<Product[]>(data.products)
 
   useEffect(() => {
     setTenant(data.tenant)
@@ -58,15 +62,16 @@ export default function Home(data: HomeProps) {
         <Banner />
 
         <SectionProducts>
-          <ProductItem
-            data={{
-              id: 1,
-              categoryName: "Tradicional",
-              image: "/tmp/burger.png",
-              name: "Texas Burger",
-              price: "R$ 25,50",
-            }}
-          />
+          {products.length > 0 ? products.map((product, key) => (
+            <ProductItem
+              key={key}
+              data={product}
+            />
+          )) : (
+            <div>
+              Não possui nenhum produto.
+            </div>
+          )}
         </SectionProducts>
       </main>
     </Container>
@@ -75,9 +80,9 @@ export default function Home(data: HomeProps) {
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const { tenant: tenantSlug } = ctx.query;
-  const api = useApi();
+  const api = useApi(tenantSlug as string);
 
-  const tenant = api.getTenant(tenantSlug as string);
+  const tenant = await api.getTenant();
 
   if (!tenant) {
     return {
@@ -88,9 +93,12 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     }
   }
 
+  const products = await api.getAllProducts();
+
   return {
     props: {
       tenant,
+      products,
     }
   }
 }

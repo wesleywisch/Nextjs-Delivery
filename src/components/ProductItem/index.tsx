@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 
 import { useAppContext } from "../../hooks/useAppContext";
+import { useFormatter } from "../../hooks/useFormatter";
 
 import { Product } from "../../types/Product";
 
@@ -13,6 +14,7 @@ type ProductItemProps = {
 
 export function ProductItem({ data }: ProductItemProps) {
   const { tenant } = useAppContext();
+  const formatter = useFormatter();
 
   return (
     <Container
@@ -35,7 +37,12 @@ export function ProductItem({ data }: ProductItemProps) {
 
           <span className="categoryName" title={data.categoryName}>{data.categoryName}</span>
           <p className="productName" title={data.name}>{data.name}</p>
-          <span className="productPrice" title={data.price}>{data.price}</span>
+          <span
+            title={formatter.formatPrice(data.price)}
+            className="productPrice"
+          >
+            {formatter.formatPrice(data.price)}
+          </span>
         </div>
       </Link>
     </Container>
