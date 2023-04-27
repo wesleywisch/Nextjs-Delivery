@@ -3,10 +3,11 @@
 import { GetServerSideProps } from 'next'
 import Image from 'next/image'
 import Head from 'next/head'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 import { Header } from '../../../components/Header'
 import { Button } from '../../../components/Button'
+import { Quantity } from '../../../components/Quantity'
 
 import { useApi } from '../../../hooks/useApi'
 import { useAppContext } from '../../../hooks/useAppContext'
@@ -24,11 +25,16 @@ type ProductProps = {
 
 export default function Product(data: ProductProps) {
   const { tenant, setTenant } = useAppContext();
-
   const formatter = useFormatter();
+
+  const [qtCount, setQtCount] = useState(1);
 
   function handleAddProductToCart() {
 
+  }
+
+  function handleUpdateQt(newCount: number) {
+    setQtCount(newCount)
   }
 
   useEffect(() => {
@@ -74,7 +80,13 @@ export default function Product(data: ProductProps) {
 
         <div className="areaProduct">
           <div className="areaProductLeft">
-            ...
+            <Quantity
+              tenantColor={data.tenant.tenantPrimaryColor}
+              quantityInitial={qtCount}
+              onUpdateQuantity={handleUpdateQt}
+              min={1}
+              max={10}
+            />
           </div>
 
           <div className="areaProductRight">

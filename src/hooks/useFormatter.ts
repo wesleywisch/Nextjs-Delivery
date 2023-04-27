@@ -7,5 +7,12 @@ export function useFormatter() {
         currency: 'BRL',
       });
     },
+    formatQuantity: (quantity: number, minDigits: number) => {
+      if (quantity.toString().length >= minDigits) {
+        return quantity;
+      }
+      const remain = minDigits - quantity.toString().length;
+      return `${'0'.repeat(remain)}${quantity}`;
+    }
   }
 }
