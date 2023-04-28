@@ -1,7 +1,20 @@
 import { useContext } from "react";
+import { AppContext } from "../contexts/app";
 
-import { AppContext } from "../contexts/AppContext";
+import { Actions } from "../contexts/app/types";
+import { Tenant } from "../types/Tenant";
 
 export function useAppContext() {
-  return useContext(AppContext)
+  const { state, dispatch } = useContext(AppContext)
+
+  return {
+    ...state,
+    setTenant: (tenant: Tenant) => {
+      dispatch({
+        type: Actions.SET_TENANT,
+        payload: { tenant },
+      })
+    },
+
+  }
 }

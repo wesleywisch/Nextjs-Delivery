@@ -1,6 +1,6 @@
 import type { AppProps } from 'next/app'
 
-import { AppContextProvider } from '../contexts/AppContext'
+import { AppContextProvider } from '../contexts/app'
 
 import { GlobalStyle } from '../styles/globalStyles'
 
