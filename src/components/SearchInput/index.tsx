@@ -16,17 +16,13 @@ export function SearchInput({ handleOnSearch }: SearchInputProps) {
   const [searchValue, setSearchValue] = useState('');
 
   function handleButtonSearch() {
-    if (searchValue.trim() && searchValue !== '') {
-      handleOnSearch(searchValue);
-    }
+    handleOnSearch(searchValue);
   }
 
   function handleKeyUp(event: KeyboardEvent<HTMLInputElement>) {
-    if (event.code === 'Enter') {
-      if (searchValue.trim() && searchValue !== '') {
-        handleOnSearch(searchValue);
-      }
-    }
+    // if (event.code === 'Enter') {
+    handleOnSearch(searchValue);
+    // }
   }
 
   return (

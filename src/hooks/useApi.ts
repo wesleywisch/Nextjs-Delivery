@@ -19,15 +19,15 @@ export function useApi(tenantSlug: string) {
           return {
             slug: 'B7Burger',
             name: 'B7Burger',
-            tenantPrimaryColor: '#ff0000',
-            tenantSecondaryColor: '#00ff00',
+            tenantPrimaryColor: '#fb9400',
+            tenantSecondaryColor: '#fff9f2',
           }
         case 'B7Pizza':
           return {
             slug: 'B7Pizza',
             name: 'B7Pizza',
-            tenantPrimaryColor: '#0000ff',
-            tenantSecondaryColor: '#ff0000',
+            tenantPrimaryColor: '#6ab70a',
+            tenantSecondaryColor: '#e0e0e0',
           }
         default: return false;
       }

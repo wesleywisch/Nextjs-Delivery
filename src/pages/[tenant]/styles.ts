@@ -6,6 +6,36 @@ type Props = {
 
 export const Container = styled.div`
   background-color: #fff;
+
+  main {
+    .searchText {
+      margin: 1.5rem;
+
+      > span {
+        font-weight: 400;
+        font-size: 1rem;
+        color: #979797;
+
+        > strong {
+          font-weight: 600;
+        }
+      }
+    }
+
+    .noProductsFiltered {
+      width: 14.6875rem;
+      margin: 5.5rem auto;
+
+      .noProductsFilteredText {
+        font-weight: 500;
+        font-size: 1.5rem;
+        line-height: 1.8125rem;
+        color: #cdcdcd;
+        text-align: center;
+        margin-top: 2rem;
+      }
+    }
+  }
 `;
 
 export const Header = styled.header<Props>`
@@ -50,10 +80,6 @@ export const Header = styled.header<Props>`
         }
       }
     }
-  }
-
-  .headerBottom {
-
   }
 `;
 

@@ -17,6 +17,8 @@ import { Tenant } from '../../types/Tenant'
 import { Product } from '../../types/Product'
 import { User } from '../../types/user'
 
+import NoItensIcon from '../../../public/assets/noItems.svg'
+
 import { Container, Header, SectionProducts } from './styles'
 
 type HomeProps = {
@@ -31,7 +33,9 @@ export default function Home(data: HomeProps) {
   const { setToken, setUser } = useAuthContext();
 
   const [products, setProducts] = useState<Product[]>(data.products)
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>([])
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [searchText, setSearchText] = useState('');
 
   useEffect(() => {
     setTenant(data.tenant)
@@ -39,9 +43,19 @@ export default function Home(data: HomeProps) {
     if (data.user) setUser(data.user)
   }, [])
 
-  function handleSearch(searchValue: string) {
-    console.log(searchValue)
-  }
+  useEffect(() => {
+    if (searchText.trim() && searchText !== '') {
+      let newFilteredProducts: Product[] = [];
+
+      for (let product of data.products) {
+        if (product.name.toLowerCase().indexOf(searchText.toLowerCase()) > -1) {
+          newFilteredProducts.push(product);
+        }
+      }
+
+      setFilteredProducts(newFilteredProducts)
+    }
+  }, [searchText])
 
   return (
     <Container>
@@ -72,57 +86,56 @@ export default function Home(data: HomeProps) {
 
         <div className="headerBottom">
           <SearchInput
-            handleOnSearch={handleSearch}
+            handleOnSearch={searchValue => setSearchText(searchValue)}
           />
         </div>
       </Header>
 
       <main>
-        <Banner />
+        {!searchText.trim() && (
+          <>
+            <Banner />
 
-        <SectionProducts>
-          {products.length > 0 ? products.map((product, key) => (
-            <ProductItem
-              key={key}
-              data={product}
-            />
-          )) : (
-            <div>
-              Não possui nenhum produto.
+            <SectionProducts>
+              {products.length > 0 && products.map((product, key) => (
+                <ProductItem
+                  key={key}
+                  data={product}
+                />
+              ))}
+            </SectionProducts>
+          </>
+        )}
+
+        {searchText.trim() && searchText !== '' && (
+          <>
+            <div className="searchText">
+              <span>Procurando por: <strong>{searchText}</strong></span>
             </div>
-          )}
-        </SectionProducts>
+
+            <SectionProducts>
+              {filteredProducts.length > 0 && filteredProducts.map((product, key) => (
+                <ProductItem
+                  key={key}
+                  data={product}
+                />
+              ))}
+            </SectionProducts>
+
+            {filteredProducts.length === 0 && (
+              <div className="noProductsFiltered">
+                <NoItensIcon color='#e0e0e0' />
+
+                <p className="noProductsFilteredText">
+                  Ops! Não há itens com este nome.
+                </p>
+              </div>
+            )}
+          </>
+        )}
       </main>
     </Container>
   )
 }
 
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const { tenant: tenantSlug } = ctx.query;
-  const api = useApi(tenantSlug as string);
 
-  const tenant = await api.getTenant();
-
-  if (!tenant) {
-    return {
-      redirect: {
-        destination: '/',
-        permanent: false,
-      }
-    }
-  }
-
-  const products = await api.getAllProducts();
-
-  const token = getCookie('@token', ctx) as string;
-  const user = await api.authorizeToken(token);
-
-  return {
-    props: {
-      tenant,
-      products,
-      user,
-      token,
-    }
-  }
-}
