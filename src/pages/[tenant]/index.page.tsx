@@ -2,6 +2,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { GetServerSideProps } from 'next'
 import { useEffect, useState } from 'react'
+import { getCookie } from 'cookies-next'
 
 import { SearchInput } from '../../components/SearchInput'
 import { Banner } from '../../components/Banner'
@@ -10,25 +11,32 @@ import { Sidebar } from '../../components/Sidebar'
 
 import { useApi } from '../../hooks/useApi'
 import { useAppContext } from '../../hooks/useAppContext'
+import { useAuthContext } from '../../hooks/useAuthContext'
 
 import { Tenant } from '../../types/Tenant'
 import { Product } from '../../types/Product'
+import { User } from '../../types/user'
 
 import { Container, Header, SectionProducts } from './styles'
 
 type HomeProps = {
   tenant: Tenant;
   products: Product[];
+  user: User | null;
+  token: string;
 }
 
 export default function Home(data: HomeProps) {
   const { tenant, setTenant } = useAppContext();
+  const { setToken, setUser } = useAuthContext();
 
   const [products, setProducts] = useState<Product[]>(data.products)
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     setTenant(data.tenant)
+    if (data.token) setToken(data.token)
+    if (data.user) setUser(data.user)
   }, [])
 
   function handleSearch(searchValue: string) {
@@ -106,10 +114,15 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
   const products = await api.getAllProducts();
 
+  const token = getCookie('@token', ctx) as string;
+  const user = await api.authorizeToken(token);
+
   return {
     props: {
       tenant,
       products,
+      user,
+      token,
     }
   }
 }

@@ -29,7 +29,7 @@ export function Sidebar({ tenant, open, handleCloseSidebar }: SidebarProps) {
           <div className="loginAreaSidebar">
             {user && (
               <div className="userInfoSidebar">
-                <strong title={user.name}>{'user.name'}</strong>
+                <strong title={user.name}>{user.name}</strong>
                 <span title={`Último pedido há 3 semanas.`}>Último pedido há 3 semanas.</span>
               </div>
             )}

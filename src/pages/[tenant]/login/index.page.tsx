@@ -12,6 +12,7 @@ import { Button } from '../../../components/Button'
 
 import { useApi } from '../../../hooks/useApi'
 import { useAppContext } from '../../../hooks/useAppContext'
+import { useAuthContext } from '../../../hooks/useAuthContext'
 
 import { Tenant } from '../../../types/Tenant'
 
@@ -23,6 +24,7 @@ type LoginProps = {
 
 export default function Login(data: LoginProps) {
   const { tenant, setTenant } = useAppContext();
+  const { setToken, setUser } = useAuthContext();
   const router = useRouter();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -32,6 +34,12 @@ export default function Login(data: LoginProps) {
   function handleSubmit(event: FormEvent) {
     event.preventDefault();
     setIsLoading(true);
+    setToken('1234');
+    setUser({
+      email: 'teste@teste.com',
+      name: 'teste',
+    });
+    router.push(`/${data.tenant.slug}`)
     setIsLoading(false);
   }
 
