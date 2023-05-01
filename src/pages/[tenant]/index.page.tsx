@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react'
 import { SearchInput } from '../../components/SearchInput'
 import { Banner } from '../../components/Banner'
 import { ProductItem } from '../../components/ProductItem'
+import { Sidebar } from '../../components/Sidebar'
 
 import { useApi } from '../../hooks/useApi'
 import { useAppContext } from '../../hooks/useAppContext'
@@ -24,6 +25,7 @@ export default function Home(data: HomeProps) {
   const { tenant, setTenant } = useAppContext();
 
   const [products, setProducts] = useState<Product[]>(data.products)
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     setTenant(data.tenant)
@@ -43,11 +45,20 @@ export default function Home(data: HomeProps) {
           </div>
 
           <div className="headerTopRight">
-            <div className="menuButton">
+            <div
+              onClick={() => setSidebarOpen(true)}
+              className="menuButton"
+            >
               <div className="menuButtonLine"></div>
               <div className="menuButtonLine"></div>
               <div className="menuButtonLine"></div>
             </div>
+
+            <Sidebar
+              tenant={data.tenant}
+              open={sidebarOpen}
+              handleCloseSidebar={() => setSidebarOpen(false)}
+            />
           </div>
         </div>
 
