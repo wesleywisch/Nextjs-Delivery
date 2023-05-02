@@ -1,9 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-hooks/rules-of-hooks */
 import { GetServerSideProps } from 'next'
+import { useRouter } from 'next/router'
 import Image from 'next/image'
 import Head from 'next/head'
 import { useEffect, useState } from 'react'
+import { hasCookie, getCookie, setCookie } from 'cookies-next'
 
 import { Header } from '../../../components/Header'
 import { Button } from '../../../components/Button'
@@ -15,6 +17,7 @@ import { useFormatter } from '../../../hooks/useFormatter'
 
 import { Tenant } from '../../../types/Tenant'
 import { Product } from '../../../types/Product'
+import { CartCookie } from '../../../types/CartCookie'
 
 import { Container } from './styles'
 
@@ -27,10 +30,33 @@ export default function Product(data: ProductProps) {
   const { tenant, setTenant } = useAppContext();
   const formatter = useFormatter();
 
+  const router = useRouter();
+
   const [qtCount, setQtCount] = useState(1);
 
-  function handleAddProductToCart() {
+  async function handleAddProductToCart() {
+    let cart: CartCookie[] = [];
 
+    if (hasCookie('@cart')) {
+      const cartCookie: CartCookie[] = JSON.parse(getCookie('@cart') as string)
+
+      for (let i in cartCookie) {
+        if (cartCookie[i].quantity && cartCookie[i].id) {
+          cart.push(cartCookie[i])
+        }
+      }
+    }
+
+    const cartIndex = cart.findIndex(item => item.id === data.product.id);
+
+    if (cartIndex > -1) {
+      cart[cartIndex].quantity += qtCount
+    } else {
+      cart.push({ id: data.product.id, quantity: qtCount });
+    }
+
+    setCookie('@cart', JSON.stringify(cart))
+    await router.push(`${data.tenant.slug}/cart`)
   }
 
   function handleUpdateQt(newCount: number) {

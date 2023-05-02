@@ -138,4 +138,32 @@ export default function Home(data: HomeProps) {
   )
 }
 
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const { tenant: tenantSlug } = ctx.query;
+  const api = useApi(tenantSlug as string);
 
+  const tenant = await api.getTenant();
+
+  if (!tenant) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      }
+    }
+  }
+
+  const products = await api.getAllProducts();
+
+  const token = getCookie('@token', ctx) as string;
+  const user = await api.authorizeToken(token);
+
+  return {
+    props: {
+      tenant,
+      products,
+      user,
+      token,
+    }
+  }
+}
