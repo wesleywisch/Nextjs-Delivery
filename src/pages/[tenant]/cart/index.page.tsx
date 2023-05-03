@@ -2,6 +2,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { GetServerSideProps } from 'next'
 import Head from 'next/head'
+import { useRouter } from 'next/router'
 import { FormEvent, useEffect, useState } from 'react'
 import { getCookie } from 'cookies-next'
 
@@ -15,16 +16,16 @@ import { useAuthContext } from '../../../hooks/useAuthContext'
 import { useFormatter } from '../../../hooks/useFormatter'
 
 import { Tenant } from '../../../types/Tenant'
-import { Product } from '../../../types/Product'
+import { CartIem } from '../../../types/CartItem'
 import { User } from '../../../types/user'
 
 import { Container, ProductsAreaListCart, ShippingAreaCart, ResumeAreaCart } from './styles'
 
 type CartProps = {
   tenant: Tenant;
-  products: Product[];
   user: User | null;
   token: string;
+  cart: CartIem[];
 }
 
 export default function Cart(data: CartProps) {
@@ -32,17 +33,24 @@ export default function Cart(data: CartProps) {
   const { setToken, setUser } = useAuthContext();
 
   const formatter = useFormatter();
+  const router = useRouter();
 
+  const [cart, setCart] = useState<CartIem[]>(data.cart)
   const [shippingInput, setShippingInput] = useState('')
   const [shippingPrice, setShippingPrice] = useState(0)
+  const [shippingTime, setShippingTime] = useState(0)
+  const [shippingAddress, setShippingAddress] = useState('')
   const [subtotal, setSubtotal] = useState(0)
 
   function handleCalculateShipping(event: FormEvent) {
     event.preventDefault();
+    setShippingPrice(9.50)
+    setShippingAddress('Rua 8432')
+    setShippingTime(20);
   }
 
-  function handleFinish() {
-
+  async function handleFinish() {
+    await router.push(`${data.tenant.slug}/checkout`)
   }
 
   useEffect(() => {
@@ -50,6 +58,16 @@ export default function Cart(data: CartProps) {
     if (data.token) setToken(data.token)
     if (data.user) setUser(data.user)
   }, [])
+
+  useEffect(() => {
+    let sub = 0;
+
+    for (let i in cart) {
+      sub += cart[i].product.price * cart[i].quantity;
+    }
+
+    setSubtotal(sub)
+  }, [cart])
 
   return (
     <Container>
@@ -65,7 +83,7 @@ export default function Cart(data: CartProps) {
 
       <main>
         <div className="productsQuantityCart">
-          <span>0 itens</span>
+          <span>{cart.length} {cart.length === 1 ? 'item' : 'itens'}</span>
         </div>
 
         <ProductsAreaListCart>
@@ -92,17 +110,19 @@ export default function Cart(data: CartProps) {
             />
           </form>
 
-          <div className="shippingInfoCart">
-            <span className="shippingAddress">Rua bla bla bla</span>
+          {shippingTime > 0 && (
+            <div className="shippingInfoCart">
+              <span className="shippingAddress">{shippingAddress}</span>
 
-            <div className="shippingTimeCart">
-              <p className="shippingTextCart">Receba em até 20 minutos</p>
+              <div className="shippingTimeCart">
+                <p className="shippingTextCart">Receba em até {shippingTime} minutos</p>
 
-              <p className="shippingPriceCart">
-                {formatter.formatPrice(shippingPrice)}
-              </p>
+                <p className="shippingPriceCart">
+                  {formatter.formatPrice(shippingPrice)}
+                </p>
+              </div>
             </div>
-          </div>
+          )}
         </ShippingAreaCart>
 
         <ResumeAreaCart tenantColor={data.tenant.tenantPrimaryColor}>
@@ -161,19 +181,18 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     }
   }
 
-  const products = await api.getAllProducts();
-
   const token = getCookie('@token', ctx) as string;
   const user = await api.authorizeToken(token);
 
-  console.log(token)
+  const cartCookie = getCookie('@cart', ctx);
+  const cart = await api.getCartProducts(cartCookie as string)
 
   return {
     props: {
       tenant,
-      products,
       user,
       token,
+      cart,
     }
   }
 }
