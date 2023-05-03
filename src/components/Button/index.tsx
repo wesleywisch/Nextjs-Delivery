@@ -7,9 +7,10 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   label: string;
   handleOnClick: (event: any) => void;
   fill?: boolean;
+  notWidth?: boolean;
 }
 
-export function Button({ tenantColor, label, handleOnClick, fill, ...rest }: ButtonProps) {
+export function Button({ tenantColor, label, handleOnClick, fill, notWidth, ...rest }: ButtonProps) {
   return (
     <Container
       onClick={handleOnClick}
@@ -17,6 +18,7 @@ export function Button({ tenantColor, label, handleOnClick, fill, ...rest }: But
       borderColor={tenantColor}
       backgroundColor={fill ? tenantColor : 'transparent'}
       {...rest}
+      notWidth={notWidth}
     >
       {label}
     </Container>
