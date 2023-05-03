@@ -4,11 +4,12 @@ import { GetServerSideProps } from 'next'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { FormEvent, useEffect, useState } from 'react'
-import { getCookie } from 'cookies-next'
+import { getCookie, setCookie } from 'cookies-next'
 
 import { Header } from '../../../components/Header'
 import { InputField } from '../../../components/InputField'
 import { Button } from '../../../components/Button'
+import { CartProductItem } from '../../../components/CartProductItem'
 
 import { useApi } from '../../../hooks/useApi'
 import { useAppContext } from '../../../hooks/useAppContext'
@@ -18,6 +19,7 @@ import { useFormatter } from '../../../hooks/useFormatter'
 import { Tenant } from '../../../types/Tenant'
 import { CartIem } from '../../../types/CartItem'
 import { User } from '../../../types/user'
+import { CartCookie } from '../../../types/CartCookie'
 
 import { Container, ProductsAreaListCart, ShippingAreaCart, ResumeAreaCart } from './styles'
 
@@ -49,6 +51,31 @@ export default function Cart(data: CartProps) {
     setShippingTime(20);
   }
 
+  function handleCartChange(newCount: number, id: string) {
+    const tempCart: CartIem[] = [...cart];
+    const cartIndex = tempCart.findIndex(item => item.product.id === id);
+
+    if (newCount > 0) {
+      tempCart[cartIndex].quantity = newCount;
+    } else {
+      delete tempCart[cartIndex]
+    }
+
+    let newCart: CartIem[] = tempCart.filter(item => item);
+
+    let cartCookie: CartCookie[] = [];
+
+    for (let i in tempCart) {
+      cartCookie.push({
+        id: tempCart[i].product.id,
+        quantity: tempCart[i].quantity,
+      })
+    }
+
+    setCookie('@cart', JSON.stringify(cartCookie))
+    setCart(newCart);
+  }
+
   async function handleFinish() {
     await router.push(`${data.tenant.slug}/checkout`)
   }
@@ -76,7 +103,7 @@ export default function Cart(data: CartProps) {
       </Head>
 
       <Header
-        backHref={`${data.tenant.slug}`}
+        backHref={`/${data.tenant.slug}`}
         color={data.tenant.tenantPrimaryColor}
         title='Sacola'
       />
@@ -87,7 +114,15 @@ export default function Cart(data: CartProps) {
         </div>
 
         <ProductsAreaListCart>
-
+          {cart.length > 0 && cart.map((item, key) => (
+            <CartProductItem
+              key={key}
+              tenantColor={data.tenant.tenantPrimaryColor}
+              productQuantity={item.quantity}
+              product={item.product}
+              onChange={handleCartChange}
+            />
+          ))}
         </ProductsAreaListCart>
 
         <ShippingAreaCart tenantColor={data.tenant.tenantPrimaryColor}>

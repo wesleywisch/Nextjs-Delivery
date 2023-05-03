@@ -64,7 +64,7 @@ export function Sidebar({ tenant, open, handleCloseSidebar }: SidebarProps) {
             color="#6a7d8b"
             label="Sacola"
             icon="cart"
-            handleClick={() => router.push(`${tenant.slug}/cart`)}
+            handleClick={() => router.push(`/${tenant.slug}/cart`)}
           />
           <SidebarMenuItem
             color="#6a7d8b"
@@ -77,7 +77,7 @@ export function Sidebar({ tenant, open, handleCloseSidebar }: SidebarProps) {
             color="#6a7d8b"
             label="Meus pedidos"
             icon="order"
-            handleClick={() => router.push(`${tenant.slug}/orders`)}
+            handleClick={() => router.push(`/${tenant.slug}/orders`)}
           />
           <SidebarMenuItem
             color="#6a7d8b"

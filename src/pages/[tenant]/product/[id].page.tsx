@@ -56,7 +56,7 @@ export default function Product(data: ProductProps) {
     }
 
     setCookie('@cart', JSON.stringify(cart))
-    await router.push(`${data.tenant.slug}/cart`)
+    await router.push(`/${data.tenant.slug}/cart`)
   }
 
   function handleUpdateQt(newCount: number) {
