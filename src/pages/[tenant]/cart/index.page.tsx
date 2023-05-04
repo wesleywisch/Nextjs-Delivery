@@ -77,7 +77,7 @@ export default function Cart(data: CartProps) {
   }
 
   async function handleFinish() {
-    await router.push(`${data.tenant.slug}/checkout`)
+    await router.push(`/${data.tenant.slug}/checkout`)
   }
 
   useEffect(() => {
