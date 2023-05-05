@@ -11,10 +11,9 @@ export const Container = styled.div<Props>`
   align-items: center;
   padding: 0.375rem;
   border-radius: 0.25rem;
-  margin-top: .5rem;
 
   .leftSide {
-    background-color: ${({ bgColor }) => bgColor ? 'rgba(0,0,0, 0.1)' : '#fff'};
+    background-color: ${({ bgColor }) => bgColor ? 'rgba(0,0,0, 0.05)' : '#fff'};
     width: 3rem;
     height: 3rem;
     display: flex;
