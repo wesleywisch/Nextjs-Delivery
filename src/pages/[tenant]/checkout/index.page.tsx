@@ -20,6 +20,7 @@ import { useFormatter } from '../../../hooks/useFormatter'
 import { Tenant } from '../../../types/Tenant'
 import { CartIem } from '../../../types/CartItem'
 import { User } from '../../../types/user'
+import { Address } from '../../../types/Address'
 
 import { Container, SectionInfoGroupCheckout, ProductsAreaListCart, ResumeAreaCart } from './styles'
 
@@ -37,15 +38,31 @@ export default function Checkout(data: CheckoutProps) {
   const formatter = useFormatter();
   const router = useRouter();
 
-  const [cart, setCart] = useState<CartIem[]>(data.cart)
-  const [subtotal, setSubtotal] = useState(0)
+  const [cart, setCart] = useState<CartIem[]>(data.cart);
+  const [subtotal, setSubtotal] = useState(0);
+  const [shippingPrice, setShippingPrice] = useState(0);
+  const [shippingAddress, setShippingAddress] = useState<Address>();
+  const [paymentType, setPaymentType] = useState<'money' | 'card'>('money');
+  const [paymentChange, setPaymentChange] = useState(0);
 
-  function handleChangeAddress() {
-
+  async function handleChangeAddress() {
+    // await router.push(`/${data.tenant.slug}/myaddresses`)
+    setShippingAddress({
+      id: '1',
+      zipcode: '99999999',
+      street: 'Rua das flores',
+      number: '321',
+      neighborhood: 'Jardins',
+      city: 'São Paulo',
+      state: 'SP',
+    });
+    setShippingPrice(9.50);
   }
 
-  async function handleFinish() {
-    await router.push(`/${data.tenant.slug}`)
+
+
+  function handleFinish() {
+
   }
 
   useEffect(() => {
@@ -86,7 +103,7 @@ export default function Checkout(data: CheckoutProps) {
                 tenantColor={data.tenant.tenantPrimaryColor}
                 leftIcon='location'
                 rightIcon='rightArrow'
-                value={'Rua bla bla bla, lá Rua bla bla bla, lá Rua bla bla bla, lá Rua bla bla bla, lá Rua bla bla bla, lá'}
+                value={shippingAddress ? `${shippingAddress.number} - ${shippingAddress.street} - ${shippingAddress.city}` : 'Escolha um endereço'}
                 onClick={handleChangeAddress}
               />
             </div>
@@ -101,8 +118,8 @@ export default function Checkout(data: CheckoutProps) {
                     tenantColor={data.tenant.tenantPrimaryColor}
                     leftIcon='money'
                     value='Dinheiro'
-                    onClick={() => { }}
-                    fill
+                    onClick={() => setPaymentType('money')}
+                    fill={paymentType === 'money'}
                   />
                 </div>
 
@@ -111,24 +128,27 @@ export default function Checkout(data: CheckoutProps) {
                     tenantColor={data.tenant.tenantPrimaryColor}
                     leftIcon='card'
                     value='Cartão'
-                    onClick={() => { }}
+                    onClick={() => setPaymentType('card')}
+                    fill={paymentType === 'card'}
                   />
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="infoAreaCheckout">
-            <span className="infoTitleCheckout">Troco</span>
-            <div className="infoBodyCheckout">
-              <InputField
-                color={data.tenant.tenantPrimaryColor}
-                placeholder="Quanto você tem em dinheiro"
-                value={''}
-                onChange={newValue => { }}
-              />
+          {paymentType === 'money' && (
+            <div className="infoAreaCheckout">
+              <span className="infoTitleCheckout">Troco</span>
+              <div className="infoBodyCheckout">
+                <InputField
+                  color={data.tenant.tenantPrimaryColor}
+                  placeholder="Quanto você tem em dinheiro"
+                  value={paymentChange ? paymentChange.toString() : ''}
+                  onChange={newValue => setPaymentChange(Number(newValue))}
+                />
+              </div>
             </div>
-          </div>
+          )}
 
           <div className="infoAreaCheckout">
             <span className="infoTitleCheckout">Cupom de desconto</span>
@@ -156,6 +176,7 @@ export default function Checkout(data: CheckoutProps) {
               productQuantity={item.quantity}
               product={item.product}
               onChange={() => { }}
+              noEdit
             />
           ))}
         </ProductsAreaListCart>
@@ -172,9 +193,9 @@ export default function Checkout(data: CheckoutProps) {
           <div className="resumeItemCart">
             <p className="resumeLeftCart">Frete</p>
 
-            {/* <span className="resumeRightCart">
+            <span className="resumeRightCart">
               {shippingPrice > 0 ? formatter.formatPrice(shippingPrice) : '--'}
-            </span> */}
+            </span>
           </div>
 
           <div className="resumeLineCart" />
@@ -182,16 +203,17 @@ export default function Checkout(data: CheckoutProps) {
           <div className="resumeItemCart">
             <p className="resumeLeftCart">Total</p>
 
-            {/* <span className="resumeRightBigCart">
+            <span className="resumeRightBigCart">
               {formatter.formatPrice(shippingPrice + subtotal)}
-            </span> */}
+            </span>
           </div>
 
           <div className="resumeButtonCart">
             <Button
               tenantColor={data.tenant.tenantPrimaryColor}
-              label='Continuar'
+              label='Finalizar pedido'
               handleOnClick={handleFinish}
+              disabled={!shippingAddress}
               fill
             />
           </div>

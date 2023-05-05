@@ -42,5 +42,35 @@ export const Container = styled.div<Props>`
     }
   }
 
-  .productItemQuantityControl {}
+  .productItemQuantityControl {
+    .qtAreaNoEdit {
+      margin-right: 1.625rem;
+
+      .qtNoEditTitle {
+        margin-bottom: 0.125rem;
+
+        > p {
+          font-weight: 600;
+          font-size: 0.75rem;
+          color: ${({ tenantColor }) => tenantColor};
+        }
+      }
+
+      .qtNoEditCount {
+        width: 2.625rem;
+        height: 2.625rem;
+        border-radius: .25rem;
+        border: 1px solid #f2f4f5;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        > span {
+          font-weight: 700;
+          font-size: 1rem;
+          color: ${({ tenantColor }) => tenantColor};
+        }
+      }
+    }
+  }
 `;

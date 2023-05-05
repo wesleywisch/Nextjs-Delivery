@@ -13,9 +13,10 @@ type CartProductItemProps = {
   productQuantity: number;
   product: Product;
   onChange: (newCount: number, id: string) => void;
+  noEdit?: boolean;
 }
 
-export function CartProductItem({ tenantColor, productQuantity, product, onChange }: CartProductItemProps) {
+export function CartProductItem({ tenantColor, productQuantity, product, onChange, noEdit }: CartProductItemProps) {
   const formatter = useFormatter();
 
   return (
@@ -47,15 +48,26 @@ export function CartProductItem({ tenantColor, productQuantity, product, onChang
       </div>
 
       <div className="productItemQuantityControl">
-        <Quantity
-          tenantColor={tenantColor}
-          quantityInitial={productQuantity}
-          onUpdateQuantity={
-            (newCount: number) => onChange(newCount, product.id)
-          }
-          min={0}
-          small
-        />
+        {noEdit ? (
+          <div className="qtAreaNoEdit">
+            <div className="qtNoEditTitle">
+              <p>Qnt.</p>
+            </div>
+            <div className="qtNoEditCount">
+              <span>{productQuantity}</span>
+            </div>
+          </div>
+        ) : (
+          <Quantity
+            tenantColor={tenantColor}
+            quantityInitial={productQuantity}
+            onUpdateQuantity={
+              (newCount: number) => onChange(newCount, product.id)
+            }
+            min={0}
+            small
+          />
+        )}
       </div>
     </Container>
   )
