@@ -48,6 +48,11 @@ export const SectionInfoGroupCheckout = styled.section`
           flex: 1;
         }
       }
+
+      .couponInput {
+        display: flex;
+        gap: 1rem;
+      }
     }
   }
 `;
@@ -75,6 +80,10 @@ export const ResumeAreaCart = styled.section<Props>`
       font-weight: 500;
       font-size: 1rem;
       color: #000;
+
+      &.discount {
+        opacity: .75;
+      }
     }
 
     .resumeRightBigCart {

@@ -44,6 +44,9 @@ export default function Checkout(data: CheckoutProps) {
   const [shippingAddress, setShippingAddress] = useState<Address>();
   const [paymentType, setPaymentType] = useState<'money' | 'card'>('money');
   const [paymentChange, setPaymentChange] = useState(0);
+  const [coupon, setCoupon] = useState('');
+  const [couponDiscount, setCouponDiscount] = useState(0);
+  const [couponInput, setCouponInput] = useState('');
 
   async function handleChangeAddress() {
     // await router.push(`/${data.tenant.slug}/myaddresses`)
@@ -59,7 +62,12 @@ export default function Checkout(data: CheckoutProps) {
     setShippingPrice(9.50);
   }
 
-
+  function handleSetCoupon() {
+    if (couponInput) {
+      setCoupon(couponInput);
+      setCouponDiscount(15.20);
+    }
+  }
 
   function handleFinish() {
 
@@ -153,13 +161,31 @@ export default function Checkout(data: CheckoutProps) {
           <div className="infoAreaCheckout">
             <span className="infoTitleCheckout">Cupom de desconto</span>
             <div className="infoBodyCheckout">
-              <ButtonWithIcon
-                tenantColor={data.tenant.tenantPrimaryColor}
-                leftIcon='coupon'
-                rightIcon='checked'
-                value='TESTE123'
-                onClick={() => { }}
-              />
+              {coupon ? (
+                <ButtonWithIcon
+                  tenantColor={data.tenant.tenantPrimaryColor}
+                  leftIcon='coupon'
+                  rightIcon='checked'
+                  value={coupon.toUpperCase()}
+                  onClick={() => { }}
+                />
+              ) : (
+                <div className="couponInput">
+                  <InputField
+                    color={data.tenant.tenantPrimaryColor}
+                    placeholder='Possui algum cupom?'
+                    value={couponInput}
+                    onChange={newValue => setCouponInput(newValue)}
+                  />
+
+                  <Button
+                    tenantColor={data.tenant.tenantPrimaryColor}
+                    label="Ok"
+                    handleOnClick={handleSetCoupon}
+                    notWidth
+                  />
+                </div>
+              )}
             </div>
           </div>
         </SectionInfoGroupCheckout>
@@ -198,13 +224,23 @@ export default function Checkout(data: CheckoutProps) {
             </span>
           </div>
 
+          {couponDiscount > 0 && (
+            <div className="resumeItemCart">
+              <p className="resumeLeftCart">Desconto</p>
+
+              <span className="resumeRightCart discount">
+                - {formatter.formatPrice(couponDiscount)}
+              </span>
+            </div>
+          )}
+
           <div className="resumeLineCart" />
 
           <div className="resumeItemCart">
             <p className="resumeLeftCart">Total</p>
 
             <span className="resumeRightBigCart">
-              {formatter.formatPrice(shippingPrice + subtotal)}
+              {formatter.formatPrice(subtotal - couponDiscount + shippingPrice)}
             </span>
           </div>
 
