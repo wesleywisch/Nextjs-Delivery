@@ -1,3 +1,4 @@
+import { Address } from "../types/Address";
 import { CartIem } from "../types/CartItem";
 import { Product } from "../types/Product";
 import { Tenant } from "../types/Tenant";
@@ -79,5 +80,22 @@ export function useApi(tenantSlug: string) {
 
       return cart;
     },
+    getUserAddress: async (email: string) => {
+      const addresses: Address[] = [];
+
+      for (let i = 0; i < 4; i++) {
+        addresses.push({
+          id: `${i + 1}`,
+          street: 'Rua das Flores',
+          number: `${i + 1}00`,
+          zipcode: '99999-999',
+          city: 'São Paulo',
+          neighborhood: 'Jardins',
+          state: 'SP',
+        })
+      }
+
+      return addresses;
+    }
   }
 }

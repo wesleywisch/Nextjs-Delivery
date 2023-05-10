@@ -49,17 +49,17 @@ export default function Checkout(data: CheckoutProps) {
   const [couponInput, setCouponInput] = useState('');
 
   async function handleChangeAddress() {
-    // await router.push(`/${data.tenant.slug}/myaddresses`)
-    setShippingAddress({
-      id: '1',
-      zipcode: '99999999',
-      street: 'Rua das flores',
-      number: '321',
-      neighborhood: 'Jardins',
-      city: 'São Paulo',
-      state: 'SP',
-    });
-    setShippingPrice(9.50);
+    await router.push(`/${data.tenant.slug}/myaddresses`)
+    // setShippingAddress({
+    //   id: '1',
+    //   zipcode: '99999999',
+    //   street: 'Rua das flores',
+    //   number: '321',
+    //   neighborhood: 'Jardins',
+    //   city: 'São Paulo',
+    //   state: 'SP',
+    // });
+    // setShippingPrice(9.50);
   }
 
   function handleSetCoupon() {
