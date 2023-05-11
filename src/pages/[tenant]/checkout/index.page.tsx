@@ -32,7 +32,7 @@ type CheckoutProps = {
 }
 
 export default function Checkout(data: CheckoutProps) {
-  const { tenant, setTenant } = useAppContext();
+  const { tenant, setTenant, shippingAddress, shippingPrice } = useAppContext();
   const { setToken, setUser } = useAuthContext();
 
   const formatter = useFormatter();
@@ -40,8 +40,6 @@ export default function Checkout(data: CheckoutProps) {
 
   const [cart, setCart] = useState<CartIem[]>(data.cart);
   const [subtotal, setSubtotal] = useState(0);
-  const [shippingPrice, setShippingPrice] = useState(0);
-  const [shippingAddress, setShippingAddress] = useState<Address>();
   const [paymentType, setPaymentType] = useState<'money' | 'card'>('money');
   const [paymentChange, setPaymentChange] = useState(0);
   const [coupon, setCoupon] = useState('');
@@ -50,16 +48,6 @@ export default function Checkout(data: CheckoutProps) {
 
   async function handleChangeAddress() {
     await router.push(`/${data.tenant.slug}/myaddresses`)
-    // setShippingAddress({
-    //   id: '1',
-    //   zipcode: '99999999',
-    //   street: 'Rua das flores',
-    //   number: '321',
-    //   neighborhood: 'Jardins',
-    //   city: 'São Paulo',
-    //   state: 'SP',
-    // });
-    // setShippingPrice(9.50);
   }
 
   function handleSetCoupon() {

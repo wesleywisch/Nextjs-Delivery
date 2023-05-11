@@ -29,19 +29,29 @@ type CheckoutProps = {
 }
 
 export default function MyAddress(data: CheckoutProps) {
-  const { tenant, setTenant } = useAppContext();
+  const { tenant, setTenant, setShippingAddress, setShippingPrice } = useAppContext();
   const { setToken, setUser } = useAuthContext();
+
+  const api = useApi(data.tenant.slug);
 
   const formatter = useFormatter();
   const router = useRouter();
 
   const [menuOpened, setMenuOpened] = useState('');
 
-  function handleNewAddress() {
-    router.push(`${data.tenant.slug}/newaddress`)
+  async function handleNewAddress() {
+    await router.push(`/${data.tenant.slug}/newaddress`)
   }
 
-  function handleAddressSelect(address: Address) { }
+  async function handleAddressSelect(address: Address) {
+    const price = await api.getShippingPrice(address);
+
+    if (price) {
+      setShippingAddress(address);
+      setShippingPrice(price);
+      await router.push(`/${data.tenant.slug}/checkout`)
+    }
+  }
 
   function handleAddressEdit(id: string) { }
 
