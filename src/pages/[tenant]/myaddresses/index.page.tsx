@@ -3,11 +3,12 @@
 import { GetServerSideProps } from 'next'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { getCookie } from 'cookies-next'
 
 import { Header } from '../../../components/Header'
 import { Button } from '../../../components/Button'
+import { AddressItem } from '../../../components/AddressItem'
 
 import { useApi } from '../../../hooks/useApi'
 import { useAppContext } from '../../../hooks/useAppContext'
@@ -34,9 +35,31 @@ export default function MyAddress(data: CheckoutProps) {
   const formatter = useFormatter();
   const router = useRouter();
 
+  const [menuOpened, setMenuOpened] = useState('');
+
   function handleNewAddress() {
     router.push(`${data.tenant.slug}/newaddress`)
   }
+
+  function handleAddressSelect(address: Address) { }
+
+  function handleAddressEdit(id: string) { }
+
+  function handleAddressDelete(id: string) { }
+
+  function handleMenuEvent(event: MouseEvent) {
+    const tagName = (event.target as Element).tagName;
+
+    if (!['path', 'svg'].includes(tagName)) {
+      setMenuOpened('');
+    }
+  }
+
+  useEffect(() => {
+    window.removeEventListener('click', handleMenuEvent);
+    window.addEventListener('click', handleMenuEvent);
+    return () => window.removeEventListener('click', handleMenuEvent);
+  }, [menuOpened])
 
   useEffect(() => {
     setTenant(data.tenant)
@@ -59,11 +82,16 @@ export default function MyAddress(data: CheckoutProps) {
       <main>
         <SectionListAddress>
           {data.addresses.length > 0 && data.addresses.map((address, key) => (
-            <div key={key}>
-              <p>
-                {address.city} - {address.number}
-              </p>
-            </div>
+            <AddressItem
+              key={key}
+              tenantColor={data.tenant.tenantPrimaryColor}
+              address={address}
+              onSelect={handleAddressSelect}
+              onEdit={handleAddressEdit}
+              onDelete={handleAddressDelete}
+              menuOpened={menuOpened}
+              setMenuOpened={setMenuOpened}
+            />
           ))}
         </SectionListAddress>
 
