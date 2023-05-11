@@ -9,9 +9,10 @@ export const Container = styled.div`
     flex-direction: column;
     min-height: 80vh;
   }
-  `;
+`;
 
 export const SectionListAddress = styled.div`
   flex: 1;
   border-top: 1.5px solid rgba(27, 27, 27, 0.1);
+  margin-bottom: 3rem;
 `;

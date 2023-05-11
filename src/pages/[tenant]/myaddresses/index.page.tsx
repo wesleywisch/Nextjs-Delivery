@@ -39,10 +39,6 @@ export default function MyAddress(data: CheckoutProps) {
 
   const [menuOpened, setMenuOpened] = useState('');
 
-  async function handleNewAddress() {
-    await router.push(`/${data.tenant.slug}/newaddress`)
-  }
-
   async function handleAddressSelect(address: Address) {
     const price = await api.getShippingPrice(address);
 
@@ -53,9 +49,15 @@ export default function MyAddress(data: CheckoutProps) {
     }
   }
 
-  function handleAddressEdit(id: string) { }
+  async function handleAddressEdit(id: string) {
+    await router.push(`/${data.tenant.slug}/address/${id}`);
+  }
 
   function handleAddressDelete(id: string) { }
+
+  async function handleNewAddress() {
+    await router.push(`/${data.tenant.slug}/address/new`);
+  }
 
   function handleMenuEvent(event: MouseEvent) {
     const tagName = (event.target as Element).tagName;

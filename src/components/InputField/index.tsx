@@ -11,19 +11,22 @@ type InputFieldProps = {
   value: string;
   onChange: (newValue: string) => void;
   type?: HTMLInputTypeAttribute;
+  id?: string;
+  error?: boolean;
 }
 
-export function InputField({ color, placeholder, value, onChange, type = 'text' }: InputFieldProps) {
+export function InputField({ color, placeholder, value, onChange, type = 'text', id, error }: InputFieldProps) {
   const [showPassword, setShowPassword] = useState(false);
 
   return (
-    <Container tenantBorderColor={color}>
+    <Container tenantBorderColor={color} error={error}>
       <input
         type={type === 'password' ? (showPassword ? 'text' : 'password') : type}
         className="inputField"
         placeholder={placeholder}
         value={value}
         onChange={e => onChange(e.target.value)}
+        id={id}
       />
 
       {type === 'password' && (

@@ -97,6 +97,9 @@ export function useApi(tenantSlug: string) {
 
       return addresses;
     },
+    addUserAddress: async (address: Address) => {
+      return address;
+    },
     getShippingPrice: async (address: Address) => {
       return 9.16;
     },
