@@ -53,7 +53,10 @@ export default function MyAddress(data: CheckoutProps) {
     await router.push(`/${data.tenant.slug}/address/${id}`);
   }
 
-  function handleAddressDelete(id: string) { }
+  async function handleAddressDelete(id: string) {
+    await api.deleteUserAddress(id);
+    router.reload();
+  }
 
   async function handleNewAddress() {
     await router.push(`/${data.tenant.slug}/address/new`);

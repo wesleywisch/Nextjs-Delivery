@@ -35,6 +35,7 @@ export default function Checkout(data: CheckoutProps) {
   const { tenant, setTenant, shippingAddress, shippingPrice } = useAppContext();
   const { setToken, setUser } = useAuthContext();
 
+  const api = useApi(data.tenant.slug);
   const formatter = useFormatter();
   const router = useRouter();
 
@@ -57,8 +58,22 @@ export default function Checkout(data: CheckoutProps) {
     }
   }
 
-  function handleFinish() {
+  async function handleFinish() {
+    if (shippingAddress) {
+      const order = await api.setOrder(
+        shippingAddress,
+        paymentType,
+        paymentChange,
+        coupon,
+        data.cart,
+      );
 
+      if (order) {
+        await router.push(`/${data.tenant.slug}/order/${order.id}`)
+      } else {
+        alert('Ocorreu um erro! Tente mais tarde!');
+      }
+    }
   }
 
   useEffect(() => {

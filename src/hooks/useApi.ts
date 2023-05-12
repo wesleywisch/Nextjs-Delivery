@@ -1,5 +1,6 @@
 import { Address } from "../types/Address";
 import { CartIem } from "../types/CartItem";
+import { Order } from "../types/Order";
 import { Product } from "../types/Product";
 import { Tenant } from "../types/Tenant";
 import { User } from "../types/user";
@@ -11,6 +12,33 @@ const TemporaryOneProduct: Product = {
   name: "Texas Burger",
   price: 25.50,
   description: "2 Blends de carne de 150g, Queijo Cheddar, Bacon Caramelizado, Salada, Molho da casa, Pão brioche artesanal."
+}
+
+const TEMPORARYorder: Order = {
+  id: '123',
+  status: 'preparing',
+  orderDate: '2023-12-05',
+  userId: '123',
+  shippingAddress: {
+    id: 'product123',
+    street: 'Rua das Flores',
+    number: '200',
+    zipcode: '58433001',
+    city: 'São Paulo',
+    neighborhood: 'Jardins',
+    state: 'SP',
+  },
+  shippingPrice: 9.14,
+  shippingType: 'card',
+  coupon: 'COUPONABC',
+  couponDiscount: 14.3,
+  products: [
+    { product: { ...TemporaryOneProduct, id: '1' }, quantity: 1 },
+    { product: { ...TemporaryOneProduct, id: '2' }, quantity: 2 },
+    { product: { ...TemporaryOneProduct, id: '3' }, quantity: 1 },
+  ],
+  subTotal: 204,
+  total: 198.84,
 }
 
 export function useApi(tenantSlug: string) {
@@ -116,8 +144,20 @@ export function useApi(tenantSlug: string) {
     editUserAddress: async (newAddressData: Address) => {
       return true;
     },
+    deleteUserAddress: async (addressId: string) => {
+      return true;
+    },
     getShippingPrice: async (address: Address) => {
       return 9.16;
+    },
+    setOrder: async (
+      address: Address,
+      paymentType: 'money' | 'card',
+      paymentChange: number,
+      coupon: string,
+      cart: CartIem[],
+    ) => {
+      return TEMPORARYorder;
     },
   }
 }
