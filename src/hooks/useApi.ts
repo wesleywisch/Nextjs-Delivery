@@ -29,8 +29,8 @@ const TEMPORARYorder: Order = {
     state: 'SP',
   },
   shippingPrice: 9.14,
-  shippingType: 'card',
-  coupon: 'COUPONABC',
+  paymentType: 'card',
+  coupon: 'CUPOMABC',
   couponDiscount: 14.3,
   products: [
     { product: { ...TemporaryOneProduct, id: '1' }, quantity: 1 },
@@ -157,6 +157,9 @@ export function useApi(tenantSlug: string) {
       coupon: string,
       cart: CartIem[],
     ) => {
+      return TEMPORARYorder;
+    },
+    getOrder: async (orderId: string) => {
       return TEMPORARYorder;
     },
   }

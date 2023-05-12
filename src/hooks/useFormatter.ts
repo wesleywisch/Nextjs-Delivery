@@ -13,6 +13,9 @@ export function useFormatter() {
       }
       const remain = minDigits - quantity.toString().length;
       return `${'0'.repeat(remain)}${quantity}`;
-    }
+    },
+    formatDate: (date: string) => {
+      return new Intl.DateTimeFormat('pt-BR').format(new Date(`${date} 00:00:00`));
+    },
   }
 }

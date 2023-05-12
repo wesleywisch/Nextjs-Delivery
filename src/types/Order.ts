@@ -8,7 +8,7 @@ export type Order = {
   userId: string;
   shippingAddress: Address;
   shippingPrice: number;
-  shippingType: 'money' | 'card';
+  paymentType: 'money' | 'card';
   paymentChange?: number;
   coupon?: string;
   couponDiscount?: number;
