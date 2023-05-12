@@ -80,7 +80,7 @@ export function useApi(tenantSlug: string) {
 
       return cart;
     },
-    getUserAddress: async (email: string) => {
+    getUserAddresses: async (email: string) => {
       const addresses: Address[] = [];
 
       for (let i = 0; i < 4; i++) {
@@ -97,8 +97,24 @@ export function useApi(tenantSlug: string) {
 
       return addresses;
     },
+    getUserAddress: async (addressId: string) => {
+      let address: Address = {
+        id: addressId,
+        street: 'Rua das Flores',
+        number: `${addressId}00`,
+        zipcode: '99999-999',
+        city: 'São Paulo',
+        neighborhood: 'Jardins',
+        state: 'SP',
+      }
+
+      return address;
+    },
     addUserAddress: async (address: Address) => {
       return address;
+    },
+    editUserAddress: async (newAddressData: Address) => {
+      return true;
     },
     getShippingPrice: async (address: Address) => {
       return 9.16;

@@ -147,7 +147,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     }
   }
 
-  const addresses = await api.getUserAddress(user.email);
+  const addresses = await api.getUserAddresses(user.email);
 
   return {
     props: {

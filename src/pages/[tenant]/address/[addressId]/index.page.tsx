@@ -25,10 +25,10 @@ type CheckoutProps = {
   tenant: Tenant;
   user: User | null;
   token: string;
-  addresses: Address[];
+  address: Address;
 }
 
-export default function NewAddress(data: CheckoutProps) {
+export default function EditAddress(data: CheckoutProps) {
   const { tenant, setTenant, setShippingAddress, setShippingPrice } = useAppContext();
   const { setToken, setUser } = useAuthContext();
 
@@ -38,39 +38,40 @@ export default function NewAddress(data: CheckoutProps) {
   const router = useRouter();
 
   const [errorsFields, setErrorFields] = useState<string[]>([]);
-  const [addressZipcode, setAddressZipcode] = useState('');
-  const [addressStreet, setAddressStreet] = useState('');
-  const [addressNumber, setAddressNumber] = useState('');
-  const [addressNeighborhood, setAddressNeighborhood] = useState('');
-  const [addressCity, setAddressCity] = useState('');
-  const [addressState, setAddressState] = useState('');
-  const [addressComplement, setAddressComplement] = useState('');
+  const [address, setAddress] = useState<Address>(data.address);
+
+  function handleChangeAddressField(
+    field: keyof Address,
+    value: typeof address[keyof Address]
+  ) {
+    setAddress({ ...address, [field]: value })
+  }
 
   function verifyAddress() {
     let approved = true;
     let newErrorFields = [];
 
-    if (addressZipcode.replaceAll(/[^0-9]/g, '').length !== 8) {
+    if (address.zipcode.replaceAll(/[^0-9]/g, '').length !== 8) {
       newErrorFields.push('zipcode');
       approved = false;
     }
-    if (addressStreet.length <= 2) {
+    if (address.street.length <= 2) {
       newErrorFields.push('street');
       approved = false;
     }
-    if (addressNumber.length <= 1) {
+    if (address.number.length <= 1) {
       newErrorFields.push('number');
       approved = false;
     }
-    if (addressNeighborhood.length <= 2) {
+    if (address.neighborhood.length <= 2) {
       newErrorFields.push('neighborhood');
       approved = false;
     }
-    if (addressCity.length <= 2) {
+    if (address.city.length <= 2) {
       newErrorFields.push('city');
       approved = false;
     }
-    if (addressState.length !== 2) {
+    if (address.state.length !== 2) {
       newErrorFields.push('state');
       approved = false;
     }
@@ -79,27 +80,16 @@ export default function NewAddress(data: CheckoutProps) {
     return approved;
   }
 
-  async function handleNewAddress(event: FormEvent) {
+  async function handleSaveAddress(event: FormEvent) {
     event.preventDefault();
 
     if (verifyAddress()) {
-      let address: Address = {
-        id: '123',
-        zipcode: addressZipcode,
-        city: addressCity,
-        neighborhood: addressNeighborhood,
-        number: addressNumber,
-        state: addressState,
-        street: addressStreet,
-        complement: addressComplement,
-      }
+      const response = await api.editUserAddress(address);
 
-      let newAddress = await api.addUserAddress(address);
-
-      if (newAddress.id !== '') {
-        await router.push(`/${data.tenant.slug}/myaddresses`);
+      if (response === true) {
+        await router.push(`/${data.tenant.slug}/myaddresses`)
       } else {
-        alert('Ocorreu um erro! Tente novamente.')
+        alert('Não foi possível salvar o endereço! Tente novamente.')
       }
     }
   }
@@ -113,18 +103,18 @@ export default function NewAddress(data: CheckoutProps) {
   return (
     <Container>
       <Head>
-        <title>Novo Endereço | {data.tenant.name}</title>
+        <title>Editar Endereço | {data.tenant.name}</title>
       </Head>
 
       <Header
         backHref={`/${data.tenant.slug}/myaddresses`}
         color={data.tenant.tenantPrimaryColor}
-        title='Novo Endereço'
+        title='Editar Endereço'
       />
 
       <main>
         <InputsArea>
-          <form onSubmit={handleNewAddress}>
+          <form onSubmit={handleSaveAddress}>
             <div className="inputRow">
               <div className="inputColumn">
                 <label htmlFor='zipcode'>CEP</label>
@@ -133,8 +123,8 @@ export default function NewAddress(data: CheckoutProps) {
                   id="zipcode"
                   color={data.tenant.tenantPrimaryColor}
                   placeholder='Digite um CEP'
-                  value={addressZipcode}
-                  onChange={value => setAddressZipcode(value)}
+                  value={address.zipcode}
+                  onChange={value => handleChangeAddressField('zipcode', value)}
                   error={errorsFields.includes('zipcode')}
                 />
               </div>
@@ -148,8 +138,8 @@ export default function NewAddress(data: CheckoutProps) {
                   id="street"
                   color={data.tenant.tenantPrimaryColor}
                   placeholder='Digite uma rua'
-                  value={addressStreet}
-                  onChange={value => setAddressStreet(value)}
+                  value={address.street}
+                  onChange={value => handleChangeAddressField('street', value)}
                   error={errorsFields.includes('street')}
                 />
               </div>
@@ -161,8 +151,8 @@ export default function NewAddress(data: CheckoutProps) {
                   id="number"
                   color={data.tenant.tenantPrimaryColor}
                   placeholder='Digite um número'
-                  value={addressNumber}
-                  onChange={value => setAddressNumber(value)}
+                  value={address.number}
+                  onChange={value => handleChangeAddressField('number', value)}
                   error={errorsFields.includes('number')}
                 />
               </div>
@@ -176,8 +166,8 @@ export default function NewAddress(data: CheckoutProps) {
                   id="neighborhood"
                   color={data.tenant.tenantPrimaryColor}
                   placeholder='Digite um bairro'
-                  value={addressNeighborhood}
-                  onChange={value => setAddressNeighborhood(value)}
+                  value={address.neighborhood}
+                  onChange={value => handleChangeAddressField('neighborhood', value)}
                   error={errorsFields.includes('neighborhood')}
                 />
               </div>
@@ -191,8 +181,8 @@ export default function NewAddress(data: CheckoutProps) {
                   id="city"
                   color={data.tenant.tenantPrimaryColor}
                   placeholder='Digite uma cidade'
-                  value={addressCity}
-                  onChange={value => setAddressCity(value)}
+                  value={address.city}
+                  onChange={value => handleChangeAddressField('city', value)}
                   error={errorsFields.includes('city')}
                 />
               </div>
@@ -206,8 +196,8 @@ export default function NewAddress(data: CheckoutProps) {
                   id="state"
                   color={data.tenant.tenantPrimaryColor}
                   placeholder='Digite um estado'
-                  value={addressState}
-                  onChange={value => setAddressState(value)}
+                  value={address.state}
+                  onChange={value => handleChangeAddressField('state', value)}
                   error={errorsFields.includes('state')}
                 />
               </div>
@@ -221,8 +211,8 @@ export default function NewAddress(data: CheckoutProps) {
                   id="complement"
                   color={data.tenant.tenantPrimaryColor}
                   placeholder='Digite um complemento'
-                  value={addressComplement}
-                  onChange={value => setAddressComplement(value)}
+                  value={address.complement ?? ''}
+                  onChange={value => handleChangeAddressField('complement', value)}
                   error={errorsFields.includes('complement')}
                 />
               </div>
@@ -231,8 +221,8 @@ export default function NewAddress(data: CheckoutProps) {
             <div className="btnArea">
               <Button
                 tenantColor={data.tenant.tenantPrimaryColor}
-                label="Adicionar"
-                handleOnClick={handleNewAddress}
+                label="Atualizar"
+                handleOnClick={handleSaveAddress}
                 type='submit'
                 fill
               />
@@ -245,7 +235,7 @@ export default function NewAddress(data: CheckoutProps) {
 }
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const { tenant: tenantSlug } = ctx.query;
+  const { tenant: tenantSlug, addressId } = ctx.query;
   const api = useApi(tenantSlug as string);
 
   const tenant = await api.getTenant();
@@ -271,14 +261,25 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     }
   }
 
-  const addresses = await api.getUserAddresses(user.email);
+  const address = await api.getUserAddress(addressId as string);
+
+  if (!address) {
+    if (!tenant) {
+      return {
+        redirect: {
+          destination: '/myaddresses',
+          permanent: false,
+        }
+      }
+    }
+  }
 
   return {
     props: {
       tenant,
       user,
       token,
-      addresses,
+      address,
     }
   }
 }
