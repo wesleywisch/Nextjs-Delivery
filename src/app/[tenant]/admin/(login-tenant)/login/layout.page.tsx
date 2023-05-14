@@ -8,8 +8,12 @@ import '@fontsource/roboto/700.css';
 
 export default function Layout({
   children,
+  params,
 }: {
   children: React.ReactNode;
+  params: {
+    tenant: string;
+  }
 }) {
   return (
     <html lang="pt-BR">
@@ -19,9 +23,9 @@ export default function Layout({
             mt: 8,
             display: 'flex',
             flexDirection: 'column',
-            alignItens: 'center',
+            alignItems: 'center',
           }}>
-            <Typography component="h3" variant="h3">B7Delivery</Typography>
+            <Typography component="h3" variant="h3">{params.tenant}</Typography>
             <Typography component="h5" variant="h5">Painel de estabelecimento</Typography>
 
             {children}
