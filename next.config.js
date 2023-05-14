@@ -14,6 +14,9 @@ const nextConfig = {
     'api.ts',
     'api.tsx',
   ],
+  experimental: {
+    appDir: true,
+  }
 }
 
 module.exports = nextConfig
