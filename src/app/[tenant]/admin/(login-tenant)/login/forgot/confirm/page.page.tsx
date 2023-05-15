@@ -1,50 +1,49 @@
 "use client"
-import Link from "next/link"
-import { useParams } from "next/navigation"
 import { FormEvent, useState } from "react"
 import {
   Box,
   Typography,
   TextField,
   Button,
-  Link as MuiLink,
   Alert,
 } from "@mui/material"
 
-import { useApiTenant } from "../../../../../hooks/useApi-Tenant"
+import { useApiTenant } from "../../../../../../../hooks/useApi-Tenant"
 
-type ParamsProps = {
-  tenant: string;
-}
-
-export default function LoginTenant() {
-  const params = useParams() as ParamsProps;
+export default function Confirm() {
   const api = useApiTenant();
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [emailField, setEmailField] = useState('');
+  const [success, setSuccess] = useState('');
   const [passwordField, setPasswordField] = useState('');
+  const [confirmPasswordField, setConfirmPasswordField] = useState('');
 
   async function handleLoginTenant(event: FormEvent) {
     event.preventDefault();
 
-    if (!emailField.trim() || !passwordField.trim()) {
-      return setError('Preencha e-mail e senha.');
+    if (!passwordField.trim() || !confirmPasswordField.trim()) {
+      return setError('Preencha a senha.');
     }
 
-    setLoading(true)
-    setError('');
+    if (passwordField !== confirmPasswordField) {
+      return setError('As senhas não batem.');
+    }
 
     try {
-      const result = await api.login(emailField, passwordField);
+      setLoading(true)
+      setError('');
+      setSuccess('');
+
+      const result = await api.redefinePassword(passwordField, 'tokenFake');
 
       if (result.error) {
         return setError(result.error);
       }
 
-      setEmailField('');
+      setSuccess('Senha redefina com sucesso!');
       setPasswordField('');
+      setConfirmPasswordField('');
     } catch (err) {
       setError('Ocorreu um erro! Tente novamente.')
       console.log(err);
@@ -63,7 +62,7 @@ export default function LoginTenant() {
           color: "#555"
         }}
       >
-        Digite seus dados para entrar no painel administrativo do estabelecimento e gerenciar produtos/pedidos.
+        Olá **Usuário**, defina sua nova senha abaixo.
       </Typography>
 
       <Box
@@ -72,26 +71,27 @@ export default function LoginTenant() {
         onSubmit={handleLoginTenant}
       >
         <TextField
-          label="Digite seu e-mail"
-          name="email"
-          type="email"
-          required
-          fullWidth
-          autoFocus
-          sx={{ mb: 2 }}
-          onChange={e => setEmailField(e.target.value)}
-          value={emailField}
-        />
-
-        <TextField
-          label="Digite sua senha"
+          label="Digite sua nova senha"
           name="password"
           type="password"
           required
           fullWidth
+          autoFocus
           sx={{ mb: 2 }}
           onChange={e => setPasswordField(e.target.value)}
           value={passwordField}
+        />
+
+        <TextField
+          label="Confirme sua nova senha"
+          name="confirmPassword"
+          type="password"
+          required
+          fullWidth
+          autoFocus
+          sx={{ mb: 2 }}
+          onChange={e => setConfirmPasswordField(e.target.value)}
+          value={confirmPasswordField}
         />
 
         {error && (
@@ -104,24 +104,24 @@ export default function LoginTenant() {
           </Alert>
         )}
 
+        {success && (
+          <Alert
+            variant="filled"
+            severity="success"
+            sx={{ mb: 3 }}
+          >
+            {success}
+          </Alert>
+        )}
+
         <Button
           type="submit"
           variant="contained"
           fullWidth
           disabled={loading}
         >
-          {loading ? 'Carregando...' : 'Entrar'}
+          {loading ? 'Carregando...' : 'Definir nova senha'}
         </Button>
-
-        <Box sx={{ mt: 3 }}>
-          <MuiLink
-            href={`/${params.tenant}/admin/login/forgot`}
-            variant="body2"
-            component={Link}
-          >
-            Esqueceu sua senha?
-          </MuiLink>
-        </Box>
       </Box>
     </>
   )

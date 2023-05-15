@@ -1,5 +1,4 @@
 "use client"
-import { useParams } from "next/navigation"
 import { FormEvent, useState } from "react"
 import {
   Box,
@@ -34,7 +33,7 @@ export default function Forgot() {
       const result = await api.forgotPassword(emailField);
 
       if (result.error) {
-        setError(result.error);
+        return setError(result.error);
       }
 
       setSuccess('Enviamos um e-mail com as instruções para recuperação da sua senha.')
