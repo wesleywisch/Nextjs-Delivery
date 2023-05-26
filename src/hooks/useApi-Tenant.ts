@@ -87,5 +87,8 @@ export function useApiTenant() {
         }, 1000)
       })
     },
+    changeOrderStatus: async (id: string, newStatus: OrderStatus) => {
+      return true
+    },
   }
 }
