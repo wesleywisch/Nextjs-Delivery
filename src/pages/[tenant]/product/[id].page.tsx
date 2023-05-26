@@ -94,7 +94,7 @@ export default function Product(data: ProductProps) {
       </div>
 
       <main>
-        <span className="categoryNameProduct" title={data.product.categoryName}>{data.product.categoryName}</span>
+        <span className="categoryNameProduct" title={data.product.category.name}>{data.product.category.name}</span>
 
         <h1 className='titleProduct' title={data.product.name}>{data.product.name}</h1>
 

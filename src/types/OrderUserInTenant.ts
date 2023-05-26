@@ -2,15 +2,16 @@ import { Address } from "./Address";
 import { CartIem } from "./CartItem";
 import { OrderStatus } from "./OrderStatus";
 
-export type Order = {
+export type OrderUserInTenant = {
   id: string;
   status: OrderStatus;
   orderDate: string;
   userId: string;
+  userName?: string;
   shippingAddress: Address;
   shippingPrice: number;
-  paymentType: 'money' | 'card';
-  paymentChange?: number;
+  paymentType: 'card' | 'money';
+  changeValue?: number;
   coupon?: string;
   couponDiscount?: number;
   products: CartIem[];

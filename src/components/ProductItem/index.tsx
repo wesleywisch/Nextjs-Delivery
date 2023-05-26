@@ -35,7 +35,7 @@ export function ProductItem({ data }: ProductItemProps) {
             />
           </div>
 
-          <span className="categoryName" title={data.categoryName}>{data.categoryName}</span>
+          <span className="categoryName" title={data.category.name}>{data.category.name}</span>
           <p className="productName" title={data.name}>{data.name}</p>
           <span
             title={formatter.formatPrice(data.price)}

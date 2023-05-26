@@ -8,7 +8,10 @@ import { User } from "../types/user";
 const TemporaryOneProduct: Product = {
   id: '1',
   image: "/tmp/burger.png",
-  categoryName: "Tradicional",
+  category: {
+    id: '123',
+    name: 'Tradicional'
+  },
   name: "Texas Burger",
   price: 25.50,
   description: "2 Blends de carne de 150g, Queijo Cheddar, Bacon Caramelizado, Salada, Molho da casa, Pão brioche artesanal."
@@ -44,7 +47,7 @@ const TEMPORARYorder: Order = {
 export function useApi(tenantSlug: string) {
   return {
     getTenant: async (): Promise<boolean | Tenant> => {
-      switch(tenantSlug) {
+      switch (tenantSlug) {
         case 'B7Burger':
           return {
             slug: 'B7Burger',

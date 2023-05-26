@@ -31,8 +31,8 @@ export function CartProductItem({ tenantColor, productQuantity, product, onChang
       </div>
 
       <div className="productItemInfo">
-        <span className="productItemCategory" title={product.categoryName}>
-          {product.categoryName}
+        <span className="productItemCategory" title={product.category.name}>
+          {product.category.name}
         </span>
 
         <p className="productItemName" title={product.name}>
