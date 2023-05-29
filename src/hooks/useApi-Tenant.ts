@@ -1,3 +1,4 @@
+import { CategoryProduct } from "../types/CategoryProduct";
 import { OrderStatus } from "../types/OrderStatus";
 import { OrderUserInTenant } from "../types/OrderUserInTenant";
 import { Product } from "../types/Product";
@@ -89,6 +90,58 @@ export function useApiTenant() {
     },
     changeOrderStatus: async (id: string, newStatus: OrderStatus) => {
       return true
+    },
+    getCategories: async (): Promise<CategoryProduct[]> => {
+      const list: CategoryProduct[] = [
+        { id: '123', name: 'Burgers', },
+        { id: '2432', name: 'Refrigerantes', },
+        { id: '42352', name: 'Doces', },
+      ]
+
+      return new Promise(resolve => {
+        setTimeout(() => {
+          resolve(list)
+        }, 500)
+      })
+    },
+    getProducts: async (): Promise<Product[]> => {
+      const list: Product[] = [
+        { ...TemporaryOneProduct, id: '1231' },
+        { ...TemporaryOneProduct, id: '8252' },
+        { ...TemporaryOneProduct, id: '4235' },
+        { ...TemporaryOneProduct, id: '6476' },
+        { ...TemporaryOneProduct, id: '2359' },
+        { ...TemporaryOneProduct, id: '5675' },
+        { ...TemporaryOneProduct, id: '0431' },
+        { ...TemporaryOneProduct, id: '4234' },
+      ]
+
+      return new Promise(resolve => {
+        setTimeout(() => {
+          resolve(list)
+        }, 500)
+      })
+    },
+    deleteProduct: async (id: string): Promise<boolean> => {
+      return new Promise(resolve => {
+        setTimeout(() => {
+          resolve(true)
+        }, 500)
+      })
+    },
+    createProduct: async (form: FormData) => {
+      return new Promise(resolve => {
+        setTimeout(() => {
+          resolve(true)
+        }, 500)
+      })
+    },
+    updateProduct: async (form: FormData) => {
+      return new Promise(resolve => {
+        setTimeout(() => {
+          resolve(true)
+        }, 500)
+      })
     },
   }
 }
