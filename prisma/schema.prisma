@@ -1,0 +1,172 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       String @id @default(uuid())
+  name     String
+  email    String @unique
+  password String
+
+  addresses UserAddresses[]
+  orders    Orders[]
+  Bag       Bag?
+
+  @@map("users")
+}
+
+model UserAddresses {
+  id           String  @id @default(uuid())
+  street       String
+  streetNumber String
+  zipcode      String
+  city         String
+  complement   String?
+
+  user_email  String
+  id_district String
+
+  District District @relation(fields: [id_district], references: [id])
+  User     User     @relation(fields: [user_email], references: [id])
+  Orders   Orders[]
+
+  @@map("user_addresses")
+}
+
+model District {
+  id        String @id @default(uuid())
+  name      String
+  price     Float
+  id_tenant String
+
+  user_addresses UserAddresses[]
+
+  Tenant Tenant? @relation(fields: [id_tenant], references: [id])
+
+  @@map("districts")
+}
+
+model Tenant {
+  id                   String     @id @default(uuid())
+  name                 String
+  email                String     @unique
+  password             String
+  tenantPrimaryColor   String
+  tenantSecondaryColor String
+  slug                 String     @unique
+  active               Boolean    @default(true)
+  districtsAttend      District[]
+  orders               Orders[]
+  products             Product[]
+  banners              Banners[]
+  Bag                  Bag[]
+
+  @@map("tenants")
+}
+
+model Product {
+  id          String  @id @default(uuid())
+  name        String
+  image       String
+  price       Float
+  description String?
+
+  id_tenant     String
+  id_category   String
+  id_bag        String
+  order_product OrderProduct[]
+
+  Bag        Bag        @relation(fields: [id_bag], references: [id])
+  Tenant     Tenant     @relation(fields: [id_tenant], references: [id])
+  Categories Categories @relation(fields: [id_category], references: [id])
+}
+
+model Categories {
+  id   String @id @default(uuid())
+  name String
+
+  products Product[]
+}
+
+model Orders {
+  id                   String         @unique @default(uuid())
+  number_order         Int            @id @default(autoincrement())
+  payment_method       String
+  payment_money_return Float?
+  delivery_Price       Float
+  subtotal             Float
+  order_date           DateTime       @default(now())
+  status               String
+  order_product        OrderProduct[]
+  order_status         OrderStatus[]
+
+  id_user    String
+  id_tenant  String
+  id_address String
+  id_coupon  String
+
+  user    User          @relation(fields: [id_user], references: [id])
+  Tenant  Tenant        @relation(fields: [id_tenant], references: [id])
+  Address UserAddresses @relation(fields: [id_address], references: [id])
+  Coupon  Coupon        @relation(fields: [id_coupon], references: [id])
+}
+
+model OrderProduct {
+  id       String @id @default(uuid())
+  price    Float
+  quantity Int
+
+  id_order   String
+  id_product String
+
+  Orders   Orders  @relation(fields: [id_order], references: [id])
+  Products Product @relation(fields: [id_product], references: [id])
+
+  @@map("order_product")
+}
+
+model Coupon {
+  id                String   @id @default(uuid())
+  name              String
+  discountFixed     Float?
+  discuntPercentage Float?
+  orders            Orders[]
+
+  @@map("coupons")
+}
+
+model Banners {
+  id    String @id @default(uuid())
+  image String
+
+  id_tenant String
+
+  Tenant Tenant @relation(fields: [id_tenant], references: [id])
+}
+
+model OrderStatus {
+  id         String   @id @default(uuid())
+  status     String
+  created_at DateTime @default(now())
+  id_order   String
+
+  Orders Orders? @relation(fields: [id_order], references: [id])
+
+  @@map("order_status")
+}
+
+model Bag {
+  id      String    @id @default(uuid())
+  product Product[]
+
+  id_user   String @unique
+  id_tenant String
+
+  user   User   @relation(fields: [id_user], references: [id])
+  tenant Tenant @relation(fields: [id_tenant], references: [id])
+}
