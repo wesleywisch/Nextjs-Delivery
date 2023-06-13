@@ -1,3 +1,7 @@
+'use client'
+import { api } from "../lib/api";
+import { useParams } from 'next/navigation'
+
 import { CategoryProduct } from "../types/CategoryProduct";
 import { OrderStatus } from "../types/OrderStatus";
 import { OrderUserInTenant } from "../types/OrderUserInTenant";
@@ -15,7 +19,30 @@ const TemporaryOneProduct: Product = {
   description: "2 Blends de carne de 150g, Queijo Cheddar, Bacon Caramelizado, Salada, Molho da casa, Pão brioche artesanal."
 }
 
+type Params = {
+  tenant: string
+}
+
+type CreateProduct = {
+  name: string
+  image: string
+  price: string
+  description?: string
+  category_id: string
+}
+
+type EditProduct = {
+  productId: string;
+  name: string
+  image: string
+  price: string
+  description?: string
+  category_id: string
+}
+
 export function useApiTenant() {
+  const params = useParams() as Params;
+
   return {
     login: async (email: string, password: string): Promise<{ error: string, token?: string }> => {
       return new Promise(resolve => {
@@ -92,56 +119,45 @@ export function useApiTenant() {
       return true
     },
     getCategories: async (): Promise<CategoryProduct[]> => {
-      const list: CategoryProduct[] = [
-        { id: '123', name: 'Burgers', },
-        { id: '2432', name: 'Refrigerantes', },
-        { id: '42352', name: 'Doces', },
-      ]
+      const list = await api.get(`/${params.tenant}/categories`)
 
-      return new Promise(resolve => {
-        setTimeout(() => {
-          resolve(list)
-        }, 500)
-      })
+      return list.data;
     },
     getProducts: async (): Promise<Product[]> => {
-      const list: Product[] = [
-        { ...TemporaryOneProduct, id: '1231' },
-        { ...TemporaryOneProduct, id: '8252' },
-        { ...TemporaryOneProduct, id: '4235' },
-        { ...TemporaryOneProduct, id: '6476' },
-        { ...TemporaryOneProduct, id: '2359' },
-        { ...TemporaryOneProduct, id: '5675' },
-        { ...TemporaryOneProduct, id: '0431' },
-        { ...TemporaryOneProduct, id: '4234' },
-      ]
+      const products = await api.get(`/${params.tenant}/products`)
 
-      return new Promise(resolve => {
-        setTimeout(() => {
-          resolve(list)
-        }, 500)
-      })
+      return products.data;
     },
     deleteProduct: async (id: string): Promise<boolean> => {
-      return new Promise(resolve => {
-        setTimeout(() => {
-          resolve(true)
-        }, 500)
-      })
+      const response = await api.delete(`/${params.tenant}/products?id=${id}`)
+
+      if (response.status === 200) {
+        return true;
+      }
+
+      return false;
     },
-    createProduct: async (form: FormData) => {
-      return new Promise(resolve => {
-        setTimeout(() => {
-          resolve(true)
-        }, 500)
+    createProduct: async (data: CreateProduct): Promise<boolean> => {
+      const response = await api.post(`/${params.tenant}/products`, {
+        data,
       })
+
+      if (response.status === 200) {
+        return true;
+      }
+
+      return false;
     },
-    updateProduct: async (form: FormData) => {
-      return new Promise(resolve => {
-        setTimeout(() => {
-          resolve(true)
-        }, 500)
+    updateProduct: async (data: EditProduct): Promise<boolean> => {
+      const response = await api.put(`/${params.tenant}/products`, {
+        data,
       })
+
+      if (response.status === 200) {
+        return true;
+      }
+
+      return false;
     },
   }
 }

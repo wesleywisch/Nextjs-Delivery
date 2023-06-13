@@ -11,7 +11,7 @@ import { useApiTenant } from "../../../../../../hooks/useApi-Tenant";
 import { Product } from "../../../../../../types/Product";
 import { CategoryProduct } from "../../../../../../types/CategoryProduct";
 
-export default function PageProductsTenant() {
+export default function Categories() {
   const api = useApiTenant();
 
   const [loading, setLoading] = useState(false)
@@ -141,7 +141,6 @@ export default function PageProductsTenant() {
         onClose={() => setEditOrCreateDialogOpen(false)}
         product={productToEdit}
         categories={categories}
-        getDataApi={getDataApi}
       />
     </Box>
   )

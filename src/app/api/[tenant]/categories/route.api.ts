@@ -17,16 +17,9 @@ export async function GET(request: Request, { params }: { params: { tenant: stri
       return NextResponse.error();
     }
 
-    const products = await prisma.product.findMany({
-      where: {
-        id_tenant: tenant.id,
-      },
-      include: {
-        category: true
-      }
-    })
+    const categories = await prisma.categories.findMany()
 
-    return NextResponse.json(products)
+    return NextResponse.json(categories)
   } catch (er) {
     return NextResponse.error();
   }
@@ -48,34 +41,24 @@ export async function POST(request: Request, { params }: { params: { tenant: str
 
     const bodySchema = z.object({
       name: z.string().min(3).max(100),
-      image: z.string(),
-      price: z.string(),
-      description: z.string().optional(),
-      category_id: z.string(),
     })
 
     const body = await request.json();
-    const { description, image, name, price, category_id } = bodySchema.parse(body.data)
-    console.log({ description, image, name, price, category_id })
+    const { name } = bodySchema.parse(body.data)
 
-    let category = await prisma.categories.findFirst({
+    const category = await prisma.categories.findFirst({
       where: {
-        id: category_id
+        name: name.toLowerCase()
       }
     })
 
-    if (!category) {
+    if (category) {
       return NextResponse.error();
     }
 
-    await prisma.product.create({
+    await prisma.categories.create({
       data: {
         name,
-        price: Number(price),
-        description,
-        image,
-        id_category: category.id,
-        id_tenant: tenant.id,
       }
     })
 
@@ -101,37 +84,18 @@ export async function PUT(request: Request, { params }: { params: { tenant: stri
 
     const bodySchemaUpdate = z.object({
       name: z.string().min(3).max(100),
-      image: z.string(),
-      price: z.string(),
-      description: z.string().optional(),
-      category_id: z.string(),
-      productId: z.string().uuid(),
+      id: z.string().uuid()
     })
 
     const body = await request.json();
-    const { description, image, name, price, category_id, productId } = bodySchemaUpdate.parse(body.data)
+    const { name, id } = bodySchemaUpdate.parse(body.data)
 
-    let category = await prisma.categories.findFirst({
+    await prisma.categories.update({
       where: {
-        id: category_id
-      }
-    })
-
-    if (!category) {
-      return NextResponse.error();
-    }
-
-    await prisma.product.updateMany({
-      where: {
-        id: productId,
+        id,
       },
       data: {
         name,
-        price: Number(price),
-        description,
-        image,
-        id_category: category.id,
-        id_tenant: tenant.id,
       }
     })
 
@@ -162,7 +126,7 @@ export async function DELETE(request: Request, { params }: { params: { tenant: s
       return NextResponse.error();
     }
 
-    await prisma.product.delete({
+    await prisma.categories.delete({
       where: {
         id,
       }

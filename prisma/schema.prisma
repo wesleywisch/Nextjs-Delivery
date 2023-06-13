@@ -15,7 +15,7 @@ model User {
 
   addresses UserAddresses[]
   orders    Orders[]
-  Bag       Bag?
+  bag       Bag?
 
   @@map("users")
 }
@@ -31,9 +31,9 @@ model UserAddresses {
   user_email  String
   id_district String
 
-  District District @relation(fields: [id_district], references: [id])
-  User     User     @relation(fields: [user_email], references: [id])
-  Orders   Orders[]
+  district District @relation(fields: [id_district], references: [id])
+  user     User     @relation(fields: [user_email], references: [id])
+  orders   Orders[]
 
   @@map("user_addresses")
 }
@@ -46,7 +46,7 @@ model District {
 
   user_addresses UserAddresses[]
 
-  Tenant Tenant? @relation(fields: [id_tenant], references: [id])
+  tenant Tenant? @relation(fields: [id_tenant], references: [id])
 
   @@map("districts")
 }
@@ -78,12 +78,12 @@ model Product {
 
   id_tenant     String
   id_category   String
-  id_bag        String
+  id_bag        String?
   order_product OrderProduct[]
 
-  Bag        Bag        @relation(fields: [id_bag], references: [id])
-  Tenant     Tenant     @relation(fields: [id_tenant], references: [id])
-  Categories Categories @relation(fields: [id_category], references: [id])
+  bag      Bag?       @relation(fields: [id_bag], references: [id])
+  tenant   Tenant     @relation(fields: [id_tenant], references: [id])
+  category Categories @relation(fields: [id_category], references: [id])
 }
 
 model Categories {
@@ -111,9 +111,9 @@ model Orders {
   id_coupon  String
 
   user    User          @relation(fields: [id_user], references: [id])
-  Tenant  Tenant        @relation(fields: [id_tenant], references: [id])
-  Address UserAddresses @relation(fields: [id_address], references: [id])
-  Coupon  Coupon        @relation(fields: [id_coupon], references: [id])
+  tenant  Tenant        @relation(fields: [id_tenant], references: [id])
+  address UserAddresses @relation(fields: [id_address], references: [id])
+  coupon  Coupon        @relation(fields: [id_coupon], references: [id])
 }
 
 model OrderProduct {
@@ -124,8 +124,8 @@ model OrderProduct {
   id_order   String
   id_product String
 
-  Orders   Orders  @relation(fields: [id_order], references: [id])
-  Products Product @relation(fields: [id_product], references: [id])
+  orders   Orders  @relation(fields: [id_order], references: [id])
+  products Product @relation(fields: [id_product], references: [id])
 
   @@map("order_product")
 }
@@ -146,7 +146,7 @@ model Banners {
 
   id_tenant String
 
-  Tenant Tenant @relation(fields: [id_tenant], references: [id])
+  tenant Tenant @relation(fields: [id_tenant], references: [id])
 }
 
 model OrderStatus {
@@ -155,7 +155,7 @@ model OrderStatus {
   created_at DateTime @default(now())
   id_order   String
 
-  Orders Orders? @relation(fields: [id_order], references: [id])
+  orders Orders? @relation(fields: [id_order], references: [id])
 
   @@map("order_status")
 }

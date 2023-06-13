@@ -1,19 +1,72 @@
 import { FormEvent } from "react";
 import { Dialog, DialogContent, DialogTitle, Box, InputLabel, Input, TextField, Select, MenuItem, Button } from "@mui/material";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from '@hookform/resolvers/zod'
 
 import { CategoryProduct } from "../../types/CategoryProduct";
 import { Product } from "../../types/Product";
+import { useApiTenant } from "../../hooks/useApi-Tenant";
 
 type ProductEditDialogProps = {
   open: boolean
   onClose: () => void
-  onSave: (event: FormEvent<HTMLFormElement>) => void;
+  getDataApi: () => void
   categories: CategoryProduct[]
   product?: Product | null;
-  disabled?: boolean;
 }
 
-export function ProductEditDialog({ open, onClose, onSave, categories, product, disabled }: ProductEditDialogProps) {
+const createOrEditFormSchema = z.object({
+  name: z.string().min(3).max(100),
+  image: z.string().url(),
+  price: z.string(),
+  description: z.string().optional(),
+  category_id: z.string(),
+})
+
+type createOrEditFormData = z.infer<typeof createOrEditFormSchema>
+
+export function ProductEditDialog({ open, onClose, categories, product, getDataApi }: ProductEditDialogProps) {
+  const api = useApiTenant();
+
+  const { handleSubmit, register, reset, formState: { isSubmitting } } = useForm<createOrEditFormData>({
+    resolver: zodResolver(createOrEditFormSchema),
+  })
+
+  async function handleSaveEditOrCreateDialog(data: createOrEditFormData) {
+    try {
+      if (product === null) {
+        const response = await api.createProduct(data)
+
+        if (response === true) {
+          onClose()
+          reset()
+        } else {
+          // fazer a verificação de erro.
+        }
+      }
+
+      if (product !== null && product !== undefined) {
+        const response = await api.updateProduct({
+          ...data,
+          productId: product.id,
+        })
+
+        if (response === true) {
+          onClose()
+          reset()
+        } else {
+          // fazer a verificação de erro.
+        }
+      }
+
+      getDataApi()
+    } catch (err) {
+      console.log(err)
+      // fazer a verificação de erro.
+    }
+  }
+
   return (
     <Dialog open={open} onClose={onClose} fullWidth>
       <DialogTitle>{product ? 'Editar Produto' : 'Novo Produto'}</DialogTitle>
@@ -22,20 +75,26 @@ export function ProductEditDialog({ open, onClose, onSave, categories, product, 
         <Box
           component="form"
           encType="multipart/form-data"
-          onSubmit={(event: FormEvent<HTMLFormElement>) => {
-            event.preventDefault();
-            onSave(event)
-          }}
+          onSubmit={handleSubmit(handleSaveEditOrCreateDialog)}
         >
           <Box sx={{ mb: 2 }}>
             <InputLabel variant="standard" htmlFor="imgField">Imagem</InputLabel>
-            <Input
+            {/* <Input
               id="imgField"
-              name="image"
               type="file"
               fullWidth
-              disabled={disabled}
+              disabled={isSubmitting}
               inputProps={{ accept: 'image/*' }}
+              {...register('imageUrl')}
+            /> */}
+            <TextField
+              id="imgField"
+              variant="standard"
+              defaultValue={product && product.image}
+              required
+              fullWidth
+              disabled={isSubmitting}
+              {...register('image')}
             />
           </Box>
 
@@ -43,12 +102,12 @@ export function ProductEditDialog({ open, onClose, onSave, categories, product, 
             <InputLabel variant="standard" htmlFor="nameField">Nome</InputLabel>
             <TextField
               id="nameField"
-              name="name"
               variant="standard"
               defaultValue={product && product.name}
               required
               fullWidth
-              disabled={disabled}
+              disabled={isSubmitting}
+              {...register('name')}
             />
           </Box>
 
@@ -56,13 +115,14 @@ export function ProductEditDialog({ open, onClose, onSave, categories, product, 
             <InputLabel variant="standard" htmlFor="priceField">Preço (em R$)</InputLabel>
             <TextField
               id="priceField"
-              name="price"
-              type="number"
+              // type="number"
               variant="standard"
+              pattern="[0-9]+([.][0-9]+)?"
               defaultValue={product && product.price}
               required
               fullWidth
-              disabled={disabled}
+              disabled={isSubmitting}
+              {...register('price')}
             />
           </Box>
 
@@ -70,13 +130,13 @@ export function ProductEditDialog({ open, onClose, onSave, categories, product, 
             <InputLabel variant="standard" htmlFor="descriptionField">Descrição</InputLabel>
             <TextField
               id="descriptionField"
-              name="description"
               variant="standard"
               defaultValue={product && product.description}
               multiline
               rows={4}
               fullWidth
-              disabled={disabled}
+              disabled={isSubmitting}
+              {...register('description')}
             />
           </Box>
 
@@ -84,12 +144,12 @@ export function ProductEditDialog({ open, onClose, onSave, categories, product, 
             <InputLabel variant="standard" htmlFor="categoryField">Categoria</InputLabel>
             <Select
               id="categoryField"
-              name="category"
               variant="standard"
               defaultValue={product && product.category.id || categories[0]?.id}
               required
               fullWidth
-              disabled={disabled}
+              disabled={isSubmitting}
+              {...register('category_id')}
             >
               {categories && categories.map((category, key) => (
                 <MenuItem key={key} value={category.id}>
@@ -100,11 +160,11 @@ export function ProductEditDialog({ open, onClose, onSave, categories, product, 
           </Box>
 
           <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-            <Button disabled={disabled} type="button" onClick={onClose}>
+            <Button disabled={isSubmitting} type="button" onClick={onClose}>
               Cancelar
             </Button>
 
-            <Button disabled={disabled} type="submit">
+            <Button disabled={isSubmitting} type="submit">
               Salvar
             </Button>
           </Box>

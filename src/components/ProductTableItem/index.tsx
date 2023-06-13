@@ -17,8 +17,8 @@ export function ProductTableItem({ product, onEdit, onDelete }: ProductTableItem
 
   return (
     <TableRow hover>
-      <TableCell sx={{ width: 50, display: { xs: 'none', md: 'table-cell' } }}>
-        {product.id}
+      <TableCell sx={{ width: 50, display: { xs: 'none', md: 'table-cell' }, }}>
+        <Typography noWrap sx={{ width: 50 }} title={product.id}>{product.id}</Typography>
       </TableCell>
 
       <TableCell sx={{ width: { xs: 50, md: 100 } }}>
@@ -31,7 +31,7 @@ export function ProductTableItem({ product, onEdit, onDelete }: ProductTableItem
       </TableCell>
 
       <TableCell>
-        <Typography component="strong">{product.name}</Typography>
+        <Typography component="strong" noWrap title={product.name}>{product.name}</Typography>
 
         <Box sx={{ display: { md: 'none' } }}>
           {formatter.formatPrice(product.price)}
@@ -39,11 +39,11 @@ export function ProductTableItem({ product, onEdit, onDelete }: ProductTableItem
       </TableCell>
 
       <TableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>
-        {formatter.formatPrice(product.price)}
+        <Typography noWrap title={formatter.formatPrice(product.price)}>{formatter.formatPrice(product.price)}</Typography>
       </TableCell>
 
       <TableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>
-        {product.category.name}
+        <Typography noWrap title={product.category.name}>{product.category.name}</Typography>
       </TableCell>
 
       <TableCell sx={{ width: { xs: 50, md: 130 } }}>
